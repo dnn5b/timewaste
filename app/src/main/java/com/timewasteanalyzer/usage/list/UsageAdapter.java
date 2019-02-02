@@ -39,7 +39,7 @@ public class UsageAdapter extends RecyclerView.Adapter<UsageAdapter.UsageViewHol
         holder.iconImage.setImageDrawable(usage.getAppIcon());
         holder.nameText.setText(isEmpty(usage.getAppName()) ? usage.getPackageName() : usage.getAppName());
         holder.launchCountText.setText("Opened: " + usage.getLaunchCount());
-        holder.foregroundTimeText.setText(usage.getTimeInForeground().asTimeString());
+        holder.foregroundTimeText.setText(usage.getForegroundTimeString());
         holder.percentageText.setText(usage.getPercent() + "%");
         holder.progressBar.setProgress(usage.getPercent());
     }

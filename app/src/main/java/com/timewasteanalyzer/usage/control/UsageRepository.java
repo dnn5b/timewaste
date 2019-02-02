@@ -6,7 +6,6 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 
 import com.timewasteanalyzer.usage.model.AppUsage;
-import com.timewasteanalyzer.usage.model.Time;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,8 +83,9 @@ public class UsageRepository {
                 long diff = E1.getTimeStamp() - E0.getTimeStamp();
                 phoneUsageToday += diff; //global Long var for total usagetime in the timerange
                 map.get(E0.getPackageName())
-                   .getTimeInForeground()
-                   .addTime(diff);
+                   .addTimeInForeground(diff);
+                map.get(E0.getPackageName())
+                   .updatePercentage(phoneUsageToday);
             }
         }
         updateUsageList(map.values());
@@ -95,13 +95,19 @@ public class UsageRepository {
         mAppUsageList.clear();
         mAppUsageList.addAll(values);
         mAppUsageList.sort((usage1, usage2) -> {
-            long time1 = usage1.getTimeInForeground().getTime();
-            long time2 = usage2.getTimeInForeground().getTime();
+            long time1 = usage1.getMsInForeground();
+            long time2 = usage2.getMsInForeground();
             return time1 < time2 ? 1 : -1;
         });
     }
 
     public String getTodayHeading() {
-        return "Today: " + new Time(phoneUsageToday).asTimeString();
+        int seconds = (int) (phoneUsageToday / 1000) % 60;
+        int minutes = (int) ((phoneUsageToday / (1000 * 60)) % 60);
+        int hours = (int) ((phoneUsageToday / (1000 * 60 * 60)) % 24);
+
+        return new StringBuilder().append("Today: ")
+                                  .append(String.format("%02d:%02d:%02d", hours, minutes, seconds))
+                                  .toString();
     }
 }

@@ -13,12 +13,16 @@ public class AppUsage {
 
     private String appName;
     private String packageName;
-    private Time timeInForeground;
+
+    private long msInForeground;
 
     private int launchCount;
     private int percent;
 
     public AppUsage(Context context, String packageName) {
+        this.packageName = packageName;
+
+        // Determine application name and icon
         final PackageManager pm = context.getPackageManager();
         ApplicationInfo ai;
         try {
@@ -27,16 +31,14 @@ public class AppUsage {
             this.appIcon = pm.getApplicationIcon(ai);
 
         } catch (final PackageManager.NameNotFoundException e) {
-
+            // TODO handle exception
+        } catch (Exception e) {
+            // TODO handle exception
         }
-        this.packageName = packageName;
     }
 
-    public Time getTimeInForeground() {
-        if (timeInForeground == null) {
-            timeInForeground = new Time(0);
-        }
-        return timeInForeground;
+    public long getMsInForeground() {
+        return msInForeground;
     }
 
     public void increaseLaunchCount() {
@@ -56,11 +58,26 @@ public class AppUsage {
     }
 
     public int getPercent() {
-        //return percent;
-        return 50;
+        return percent;
     }
 
     public int getLaunchCount() {
         return launchCount;
+    }
+
+    public String getForegroundTimeString() {
+        int seconds = (int) (msInForeground / 1000) % 60;
+        int minutes = (int) ((msInForeground / (1000 * 60)) % 60);
+        int hours = (int) ((msInForeground / (1000 * 60 * 60)) % 24);
+
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public void addTimeInForeground(long diff) {
+        this.msInForeground += diff;
+    }
+
+    public void updatePercentage(long total) {
+        this.percent = (int) (msInForeground * 100.0 / total + 0.5);
     }
 }
