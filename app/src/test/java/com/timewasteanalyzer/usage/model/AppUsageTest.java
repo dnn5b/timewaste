@@ -3,12 +3,12 @@ package com.timewasteanalyzer.usage.model;
 
 import android.content.Context;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static junit.framework.Assert.assertEquals;
 
 
 public class AppUsageTest {
@@ -26,11 +26,32 @@ public class AppUsageTest {
     }
 
     @Test
+    public void foregroundTimeString_seconds() {
+        tut.addTimeInForeground(5000);
+
+        assertEquals("00:00:05", tut.getForegroundTimeString());
+    }
+
+    @Test
+    public void foregroundTimeString_minutes() {
+        tut.addTimeInForeground(65000);
+
+        assertEquals("00:01:05", tut.getForegroundTimeString());
+    }
+
+    @Test
+    public void foregroundTimeString_hours() {
+        tut.addTimeInForeground(1051565000);
+
+        assertEquals("04:06:05", tut.getForegroundTimeString());
+    }
+
+    @Test
     public void updatePercentage10() {
         tut.addTimeInForeground(11561);
         tut.updatePercentage(115610);
 
-        Assert.assertEquals(10, tut.getPercent());
+        assertEquals(10, tut.getPercent());
     }
 
     @Test
@@ -38,7 +59,7 @@ public class AppUsageTest {
         tut.addTimeInForeground(10);
         tut.updatePercentage(20);
 
-        Assert.assertEquals(50, tut.getPercent());
+        assertEquals(50, tut.getPercent());
     }
 
     @Test
@@ -46,6 +67,6 @@ public class AppUsageTest {
         tut.addTimeInForeground(115618);
         tut.updatePercentage(115618);
 
-        Assert.assertEquals(100, tut.getPercent());
+        assertEquals(100, tut.getPercent());
     }
 }
