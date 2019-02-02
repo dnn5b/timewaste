@@ -4,7 +4,7 @@
     <dimen name="default_padding">10dp</dimen>
 
     <!-- Text sizes -->
-    <dimen name="text_size_list_item_name">16dp</dimen>
-    <dimen name="text_size_list_item_other">12dp</dimen>
+    <dimen name="text_size_list_item_name">14dp</dimen>
+    <dimen name="text_size_list_item_other">10dp</dimen>
 
 </resources>

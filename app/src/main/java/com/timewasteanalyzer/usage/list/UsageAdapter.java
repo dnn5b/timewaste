@@ -4,6 +4,8 @@ package com.timewasteanalyzer.usage.list;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -34,10 +36,12 @@ public class UsageAdapter extends RecyclerView.Adapter<UsageAdapter.UsageViewHol
     @Override
     public void onBindViewHolder(UsageViewHolder holder, int position) {
         AppUsage usage = mUsageList.get(position);
+        holder.iconImage.setImageDrawable(usage.getAppIcon());
         holder.nameText.setText(isEmpty(usage.getAppName()) ? usage.getPackageName() : usage.getAppName());
         holder.launchCountText.setText("Opened: " + usage.getLaunchCount());
         holder.foregroundTimeText.setText(usage.getTimeInForeground().asTimeString());
-        holder.percentageText.setText("TODO %");
+        holder.percentageText.setText(usage.getPercent() + "%");
+        holder.progressBar.setProgress(usage.getPercent());
     }
 
     @Override
@@ -47,17 +51,21 @@ public class UsageAdapter extends RecyclerView.Adapter<UsageAdapter.UsageViewHol
 
     public static class UsageViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView iconImage;
         TextView nameText;
         TextView launchCountText;
         TextView foregroundTimeText;
         TextView percentageText;
+        ProgressBar progressBar;
 
         UsageViewHolder(RelativeLayout itemContainer) {
             super(itemContainer);
+            iconImage = itemContainer.findViewById(R.id.item_icon);
             nameText = itemContainer.findViewById(R.id.item_name);
             launchCountText = itemContainer.findViewById(R.id.item_count_open);
             foregroundTimeText = itemContainer.findViewById(R.id.item_foreground_time);
             percentageText = itemContainer.findViewById(R.id.item_percentage);
+            progressBar = itemContainer.findViewById(R.id.progressbar);
         }
     }
 }
