@@ -16,7 +16,8 @@ import com.timewasteanalyzer.usage.list.UsageAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
-    private UsageRepository repo = new UsageRepository(this);
+    /** The repository for accessing the usage data. */
+    private UsageRepository repo;
 
     private TextView mTabHeading;
     private RecyclerView.Adapter mUsageAdapter;
@@ -26,13 +27,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        repo = UsageRepository.getInstance(this);
         mTabHeading = findViewById(R.id.usage_heading);
 
         setupRecyclerView();
         setupBottomNavigation();
 
         if (new PermissionRequester(this).checkForPermission()) {
-            repo.getUsageStatistics();
+            // Today's usage is default filtering on startup
+            updateView(FilterType.DAY);
         }
     }
 
@@ -71,16 +74,21 @@ public class MainActivity extends AppCompatActivity {
         String headingText = "";
         switch (filterType) {
             case DAY:
-                headingText = repo.getTodayHeading();
+                headingText = getString(R.string.title_today);
+                repo.queryUsageStatisticsForType(FilterType.DAY);
                 break;
+
             case WEEK:
                 headingText = getString(R.string.title_week);
+                repo.queryUsageStatisticsForType(FilterType.WEEK);
                 break;
+
             case ALL:
                 headingText = getString(R.string.title_all);
+                repo.queryUsageStatisticsForType(FilterType.ALL);
                 break;
         }
-        mTabHeading.setText(headingText);
+        mTabHeading.setText(headingText + repo.getTotalTypeForFilter());
         mUsageAdapter.notifyDataSetChanged();
     }
 
