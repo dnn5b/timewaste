@@ -1,6 +1,12 @@
 <resources>
+    <!-- General -->
     <string name="app_name">TimeWasteAnalyzer</string>
+
+    <!-- Navigation -->
     <string name="title_today">Today</string>
     <string name="title_week">Week</string>
     <string name="title_all">All</string>
+
+    <!-- Permission -->
+    <string name="grant_permission_message">Please grant the usage data permission</string>
 </resources>

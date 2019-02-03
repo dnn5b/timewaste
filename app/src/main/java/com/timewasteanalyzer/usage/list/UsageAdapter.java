@@ -49,8 +49,10 @@ public class UsageAdapter extends RecyclerView.Adapter<UsageAdapter.UsageViewHol
         return mUsageList.size();
     }
 
+    /**
+     * The ViewHolder for a usage list item.
+     */
     public static class UsageViewHolder extends RecyclerView.ViewHolder {
-
         ImageView iconImage;
         TextView nameText;
         TextView launchCountText;
