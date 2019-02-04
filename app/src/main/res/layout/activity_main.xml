@@ -2,15 +2,13 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
     >
 
     <TextView
-        android:id="@+id/usage_heading"
+        android:id="@+id/usageHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -19,10 +17,10 @@
         />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/usage_recyclerview"
+        android:id="@+id/usageRecyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/usage_heading"
+        android:layout_below="@+id/usageHeading"
         android:layout_above="@+id/navigation"
         />
 

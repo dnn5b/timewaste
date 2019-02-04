@@ -11,17 +11,17 @@ public class UtilityTest {
 
     @Test
     public void emptyString() {
-        assertTrue(Utility.isEmpty(""));
+        assertTrue(Utility.INSTANCE.isEmpty(""));
     }
 
     @Test
     public void nullString() {
-        assertTrue(Utility.isEmpty(null));
+        assertTrue(Utility.INSTANCE.isEmpty(null));
     }
 
     @Test
     public void validString() {
-        assertFalse(Utility.isEmpty("some text"));
+        assertFalse(Utility.INSTANCE.isEmpty("some text"));
     }
 
 }
