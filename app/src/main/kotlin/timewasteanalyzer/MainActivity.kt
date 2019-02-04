@@ -2,20 +2,14 @@ package com.timewasteanalyzer
 
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.TextView
-
 import com.timewasteanalyzer.permission.PermissionRequester
 import com.timewasteanalyzer.usage.control.FilterType
 import com.timewasteanalyzer.usage.control.UsageRepository
 import com.timewasteanalyzer.usage.list.UsageAdapter
-
-import kotlinx.android.synthetic.main.activity_main.usageRecyclerview
-import kotlinx.android.synthetic.main.activity_main.navigation
-import kotlinx.android.synthetic.main.activity_main.usageHeading
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -90,7 +84,7 @@ class MainActivity : AppCompatActivity() {
                 repo!!.queryUsageStatisticsForType(FilterType.ALL)
             }
         }
-        usageHeading.text = headingText + repo!!.totalTypeForFilter
+        usageHeading.text = headingText + ": " + repo!!.totalTypeForFilter
         mUsageAdapter!!.notifyDataSetChanged()
     }
 

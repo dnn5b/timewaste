@@ -4,45 +4,35 @@ package com.timewasteanalyzer.usage.control
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
-
 import com.timewasteanalyzer.usage.model.AppUsage
-
-import java.util.ArrayList
-import java.util.HashMap
+import java.util.*
 
 class UsageRepository(context: android.content.Context) {
 
-    private var mAppUsageList: MutableList<AppUsage> = ArrayList<AppUsage>()
+    private var mAppUsageList: MutableList<AppUsage> = ArrayList()
     private var mUsageStatsManager: UsageStatsManager
-
-    private var mContext: Context
-
-    private var appUsageMap: HashMap<String, AppUsage> = HashMap<String, AppUsage>()
-    private var allEvents: MutableList<UsageEvents.Event> = ArrayList<UsageEvents.Event>()
-
+    private var mAppUsageMap: HashMap<String, AppUsage> = HashMap()
+    private var mAllEvents: MutableList<UsageEvents.Event> = ArrayList()
+    private var mContext: Context = context
     private var phoneUsageTotal: Long = 0
 
     val totalTypeForFilter: String
-        get() = todayHeading
+        get() {
+            val seconds = (phoneUsageTotal / 1000).toInt() % 60
+            val minutes = (phoneUsageTotal / (1000 * 60) % 60).toInt()
+            val hours = (phoneUsageTotal / (1000 * 60 * 60) % 24).toInt()
+
+            return StringBuilder()
+                    .append(String.format("%02d:%02d:%02d", hours, minutes, seconds))
+                    .toString()
+        }
 
     val usageList: List<AppUsage>
         get() {
             return mAppUsageList
         }
 
-    val todayHeading: String
-        get() {
-            val seconds = (phoneUsageTotal / 1000).toInt() % 60
-            val minutes = (phoneUsageTotal / (1000 * 60) % 60).toInt()
-            val hours = (phoneUsageTotal / (1000 * 60 * 60) % 24).toInt()
-
-            return StringBuilder().append("Today: ")
-                    .append(String.format("%02d:%02d:%02d", hours, minutes, seconds))
-                    .toString()
-        }
-
     init {
-        mContext = context
         mUsageStatsManager = mContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
     }
 
@@ -75,14 +65,14 @@ class UsageRepository(context: android.content.Context) {
         initializeDataBasedOn(queriedUsage)
 
         // Iterate through usage list
-        for (i in 0 until allEvents.size - 1) {
-            val event = allEvents[i]
-            val event2 = allEvents[i + 1]
+        for (i in 0 until mAllEvents.size - 1) {
+            val event = mAllEvents[i]
+            val event2 = mAllEvents[i + 1]
 
             // Calculate opened counter
             if (event.packageName != event2.packageName && event2.eventType == 1) {
                 // if true, E1 (launch event of an app) app launched
-                appUsageMap[event2.packageName]?.increaseLaunchCount()
+                mAppUsageMap[event2.packageName]?.increaseLaunchCount()
             }
 
             // UsageTime of apps in time range
@@ -92,22 +82,22 @@ class UsageRepository(context: android.content.Context) {
                 phoneUsageTotal += diff
 
                 // Update current usage
-                val currentUsage = appUsageMap[event.packageName]
+                val currentUsage = mAppUsageMap[event.packageName]
                 currentUsage?.addTimeInForeground(diff)
                 currentUsage?.updatePercentage(phoneUsageTotal)
             }
         }
-        updateUsageList(appUsageMap.values)
+        updateUsageList(mAppUsageMap.values)
     }
 
     private fun resetFormerData() {
         phoneUsageTotal = 0
-        appUsageMap = HashMap()
-        allEvents = ArrayList<android.app.usage.UsageEvents.Event>()
+        mAppUsageMap = HashMap()
+        mAllEvents = ArrayList()
     }
 
     /**
-     * Resets the [.appUsageMap] and [.allEvents]. Afterwards the data is updated based on the passed
+     * Resets the [.mAppUsageMap] and [.mAllEvents]. Afterwards the data is updated based on the passed
      * [UsageEvents].
      *
      * @param usageEvents the queried [UsageEvents]
@@ -118,12 +108,12 @@ class UsageRepository(context: android.content.Context) {
             currentEvent = UsageEvents.Event()
             usageEvents.getNextEvent(currentEvent)
             if (currentEvent.eventType == UsageEvents.Event.MOVE_TO_FOREGROUND || currentEvent.eventType == UsageEvents.Event.MOVE_TO_BACKGROUND) {
-                allEvents.add(currentEvent)
+                mAllEvents.add(currentEvent)
 
                 // Save usages into map
                 val key = currentEvent.packageName
-                if (appUsageMap[key] == null)
-                    appUsageMap[key] = AppUsage(mContext, key)
+                if (mAppUsageMap[key] == null)
+                    mAppUsageMap[key] = AppUsage(mContext, key)
             }
         }
     }

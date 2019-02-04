@@ -14,10 +14,6 @@ import com.timewasteanalyzer.R
 
 class PermissionRequester(private val mActivity: Activity) {
 
-    /**
-     *
-     * @return
-     */
     fun checkForPermission(): Boolean {
         val granted: Boolean
 
