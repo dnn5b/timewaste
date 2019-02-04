@@ -10,7 +10,6 @@ import java.util.*
 
 class UsageRepository private constructor(context: Context) {
 
-
     private var mAppUsageList: MutableList<AppUsage> = ArrayList()
     private var mUsageStatsManager: UsageStatsManager
     private var mAppUsageMap: HashMap<String, AppUsage> = HashMap()
@@ -63,6 +62,7 @@ class UsageRepository private constructor(context: Context) {
 
         // Query events and initialize repository data
         val queriedUsage = mUsageStatsManager.queryEvents(startTime, now)
+        mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, 0, now)
         initializeDataBasedOn(queriedUsage)
 
         // Iterate through usage list
@@ -85,9 +85,12 @@ class UsageRepository private constructor(context: Context) {
                 // Update current usage
                 val currentUsage = mAppUsageMap[event.packageName]
                 currentUsage?.addTimeInForeground(diff)
-                currentUsage?.updatePercentage(phoneUsageTotal)
             }
         }
+
+        // Percentages have to updated after total phone usage is calculate based on all events.
+        mAppUsageMap.values.forEach { it.updatePercentage(phoneUsageTotal) }
+
         updateUsageList(mAppUsageMap.values)
     }
 
