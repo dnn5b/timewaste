@@ -5,9 +5,11 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.timewasteanalyzer.usage.model.AppUsage
+import timewasteanalyzer.util.SingletonHolder
 import java.util.*
 
-class UsageRepository(context: android.content.Context) {
+class UsageRepository private constructor(context: Context) {
+
 
     private var mAppUsageList: MutableList<AppUsage> = ArrayList()
     private var mUsageStatsManager: UsageStatsManager
@@ -15,6 +17,13 @@ class UsageRepository(context: android.content.Context) {
     private var mAllEvents: MutableList<UsageEvents.Event> = ArrayList()
     private var mContext: Context = context
     private var phoneUsageTotal: Long = 0
+
+    init {
+        mContext = context
+        mUsageStatsManager = mContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+    }
+
+    companion object : SingletonHolder<UsageRepository, Context>(::UsageRepository)
 
     val totalTypeForFilter: String
         get() {
@@ -32,10 +41,6 @@ class UsageRepository(context: android.content.Context) {
             return mAppUsageList
         }
 
-    init {
-        mUsageStatsManager = mContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
-    }
-
     /**
      * Queries the usage data for the passed [FilterType].
      *
@@ -45,19 +50,15 @@ class UsageRepository(context: android.content.Context) {
         resetFormerData()
 
         val now = System.currentTimeMillis()
-        var startTime: Long = 0
-        when (filterType) {
-            FilterType.DAY ->
-                // TODO filter from 0:00 instead of 24h
-                startTime = now - 1000 * 3600 * 24 // querying last day
+        var startTime: Long = when (filterType) {
+            // TODO filter from 0:00 instead of 24h
+            FilterType.DAY -> now - 1000 * 3600 * 24 // querying last day
 
-            FilterType.WEEK ->
-                // TODO test whether last weeks events are queried like this
-                startTime = now - 1000 * 3600 * 24 * 7
+            // TODO test whether last weeks events are queried like this
+            FilterType.WEEK -> now - 1000 * 3600 * 24 * 7
 
-            FilterType.ALL ->
-                // TODO test whether all events are queried like this
-                startTime = 0
+            // TODO test whether all events are queried like this
+            FilterType.ALL -> 0
         }
 
         // Query events and initialize repository data
@@ -120,7 +121,7 @@ class UsageRepository(context: android.content.Context) {
 
     private fun updateUsageList(values: Collection<AppUsage>) {
         mAppUsageList.clear()
-        mAppUsageList.addAll(values.sortedWith(compareBy({ -it.msInForeground })))
+        mAppUsageList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
     }
 
 }

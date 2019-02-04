@@ -14,16 +14,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    /** The repository for accessing the usage data.  */
-    private var repo: UsageRepository? = null
+    /** The repository for accessing the usage data. */
+    private var mRepo: UsageRepository? = null
 
+    /** Adapter to show usages in RecyclerView. */
     private var mUsageAdapter: RecyclerView.Adapter<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        repo = UsageRepository(this)
+        mRepo = UsageRepository.getInstance(this)
 
         setupRecyclerView()
         setupBottomNavigation()
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         usageRecyclerview.setHasFixedSize(true)
 
         // Add adapter containing the current list of usages
-        mUsageAdapter = UsageAdapter(repo!!.usageList)
+        mUsageAdapter = UsageAdapter(mRepo!!.usageList)
         usageRecyclerview.adapter = mUsageAdapter
     }
 
@@ -71,20 +72,20 @@ class MainActivity : AppCompatActivity() {
         when (filterType) {
             FilterType.DAY -> {
                 headingText = getString(R.string.title_today)
-                repo!!.queryUsageStatisticsForType(FilterType.DAY)
+                mRepo!!.queryUsageStatisticsForType(FilterType.DAY)
             }
 
             FilterType.WEEK -> {
                 headingText = getString(R.string.title_week)
-                repo!!.queryUsageStatisticsForType(FilterType.WEEK)
+                mRepo!!.queryUsageStatisticsForType(FilterType.WEEK)
             }
 
             FilterType.ALL -> {
                 headingText = getString(R.string.title_all)
-                repo!!.queryUsageStatisticsForType(FilterType.ALL)
+                mRepo!!.queryUsageStatisticsForType(FilterType.ALL)
             }
         }
-        usageHeading.text = headingText + ": " + repo!!.totalTypeForFilter
+        usageHeading.text = headingText + ": " + mRepo!!.totalTypeForFilter
         mUsageAdapter!!.notifyDataSetChanged()
     }
 

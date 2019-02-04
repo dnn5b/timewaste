@@ -3,16 +3,13 @@ package com.timewasteanalyzer.usage.list
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import android.widget.TextView
-
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.model.AppUsage
-
 import com.timewasteanalyzer.util.Utility.isEmpty
+import kotlinx.android.synthetic.main.layout_usage_list_item.view.*
 
 
 class UsageAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapter<UsageAdapter.UsageViewHolder>() {
@@ -20,18 +17,12 @@ class UsageAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapte
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsageViewHolder {
         val v = LayoutInflater.from(parent.context)
                 .inflate(R.layout.layout_usage_list_item, parent, false) as RelativeLayout
-        val vh = UsageViewHolder(v)
-        return vh
+        return UsageViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: UsageViewHolder, position: Int) {
         val usage = mUsageList[position]
-        holder.iconImage.setImageDrawable(usage.appIcon)
-        holder.nameText.text = if (isEmpty(usage.appName)) usage.packageName else usage.appName
-        holder.launchCountText.text = "Opened: " + usage.launchCount
-        holder.foregroundTimeText.text = usage.foregroundTimeString
-        holder.percentageText.text = usage.percent.toString() + "%"
-        holder.progressBar.progress = usage.percent
+        holder.bindUsage(usage)
     }
 
     override fun getItemCount(): Int {
@@ -41,21 +32,14 @@ class UsageAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapte
     /**
      * The ViewHolder for a usage list item.
      */
-    class UsageViewHolder internal constructor(itemContainer: RelativeLayout) : RecyclerView.ViewHolder(itemContainer) {
-        internal var iconImage: ImageView
-        internal var nameText: TextView
-        internal var launchCountText: TextView
-        internal var foregroundTimeText: TextView
-        internal var percentageText: TextView
-        internal var progressBar: ProgressBar
-
-        init {
-            iconImage = itemContainer.findViewById(R.id.item_icon)
-            nameText = itemContainer.findViewById(R.id.item_name)
-            launchCountText = itemContainer.findViewById(R.id.item_count_open)
-            foregroundTimeText = itemContainer.findViewById(R.id.item_foreground_time)
-            percentageText = itemContainer.findViewById(R.id.item_percentage)
-            progressBar = itemContainer.findViewById(R.id.progressbar)
+    class UsageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        fun bindUsage(usage: AppUsage) {
+            itemView.itemIcon.setImageDrawable(usage.appIcon)
+            itemView.itemName.text = if (isEmpty(usage.appName)) usage.packageName else usage.appName
+            itemView.itemCountOpen.text = "Opened: " + usage.launchCount
+            itemView.itemForegroundTime.text = usage.foregroundTimeString
+            itemView.itemPercentage.text = usage.percent.toString() + "%"
+            itemView.progressbar.progress = usage.percent
         }
     }
 }
