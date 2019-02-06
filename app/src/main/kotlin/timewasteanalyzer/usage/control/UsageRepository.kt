@@ -4,6 +4,7 @@ package com.timewasteanalyzer.usage.control
 import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
+import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.model.AppUsage
 import timewasteanalyzer.util.SingletonHolder
 import java.util.*
@@ -17,20 +18,31 @@ class UsageRepository private constructor(context: Context) {
     private var mContext: Context = context
     private var phoneUsageTotal: Long = 0
 
+    private lateinit var mCurrentFilterType: FilterType
+
     init {
         mContext = context
         mUsageStatsManager = mContext.getSystemService(Context.USAGE_STATS_SERVICE) as UsageStatsManager
+        mCurrentFilterType = FilterType.DAY
     }
 
     companion object : SingletonHolder<UsageRepository, Context>(::UsageRepository)
 
-    val totalTypeForFilter: String
+    val getTotalTimeHeading: String
         get() {
+            var filterText = when (mCurrentFilterType) {
+                FilterType.DAY -> R.string.title_today
+                FilterType.WEEK -> R.string.title_week
+                FilterType.ALL -> R.string.title_all
+            }
+
             val seconds = (phoneUsageTotal / 1000).toInt() % 60
             val minutes = (phoneUsageTotal / (1000 * 60) % 60).toInt()
             val hours = (phoneUsageTotal / (1000 * 60 * 60) % 24).toInt()
 
             return StringBuilder()
+                    .append(mContext.getString(filterText))
+                    .append(": ")
                     .append(String.format("%02d:%02d:%02d", hours, minutes, seconds))
                     .toString()
         }
@@ -45,11 +57,11 @@ class UsageRepository private constructor(context: Context) {
      *
      * @param filterType the current [FilterType]
      */
-    fun queryUsageStatisticsForType(filterType: FilterType) {
+    fun queryUsageStatisticsForCurrentType() {
         resetFormerData()
 
         val now = System.currentTimeMillis()
-        var startTime: Long = when (filterType) {
+        var startTime: Long = when (mCurrentFilterType) {
             // TODO filter from 0:00 instead of 24h
             FilterType.DAY -> now - 1000 * 3600 * 24 // querying last day
 
@@ -125,6 +137,10 @@ class UsageRepository private constructor(context: Context) {
     private fun updateUsageList(values: Collection<AppUsage>) {
         mAppUsageList.clear()
         mAppUsageList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
+    }
+
+    fun setCurrentType(currentFilter: FilterType) {
+        mCurrentFilterType = currentFilter
     }
 
 }

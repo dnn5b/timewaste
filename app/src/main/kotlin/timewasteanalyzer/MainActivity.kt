@@ -1,6 +1,7 @@
 package com.timewasteanalyzer
 
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -10,9 +11,11 @@ import com.timewasteanalyzer.usage.control.FilterType
 import com.timewasteanalyzer.usage.control.UsageRepository
 import com.timewasteanalyzer.usage.list.UsageAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import timewasteanalyzer.usage.refresh.RefreshDoneCallback
+import timewasteanalyzer.usage.refresh.RefreshRepositoryTask
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), RefreshDoneCallback {
 
     /** The repository for accessing the usage data. */
     private var mRepo: UsageRepository? = null
@@ -27,11 +30,11 @@ class MainActivity : AppCompatActivity() {
         mRepo = UsageRepository.getInstance(this)
 
         setupRecyclerView()
+        setupRefreshLayout()
         setupBottomNavigation()
 
         if (PermissionRequester(this).checkForPermission()) {
-            // Today's usage is default filtering on startup
-            updateView(FilterType.DAY)
+            RefreshRepositoryTask(this).execute()
         }
     }
 
@@ -49,44 +52,52 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNavigation() {
         navigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
+            var isHandled = when (item.itemId) {
                 R.id.navigation_today -> {
-                    updateView(FilterType.DAY)
+                    mRepo!!.setCurrentType(FilterType.DAY)
                     true
                 }
                 R.id.navigation_week -> {
-                    updateView(FilterType.WEEK)
+                    mRepo!!.setCurrentType(FilterType.WEEK)
                     true
                 }
                 R.id.navigation_all -> {
-                    updateView(FilterType.ALL)
+                    mRepo!!.setCurrentType(FilterType.ALL)
                     true
                 }
                 else -> false
             }
+            // Start refresh animation
+            refreshLayout.isRefreshing = false
+
+            // Start update of repository
+            RefreshRepositoryTask(this).execute()
+            isHandled
         }
     }
 
-    private fun updateView(filterType: FilterType) {
-        var headingText = ""
-        when (filterType) {
-            FilterType.DAY -> {
-                headingText = getString(R.string.title_today)
-                mRepo!!.queryUsageStatisticsForType(FilterType.DAY)
-            }
-
-            FilterType.WEEK -> {
-                headingText = getString(R.string.title_week)
-                mRepo!!.queryUsageStatisticsForType(FilterType.WEEK)
-            }
-
-            FilterType.ALL -> {
-                headingText = getString(R.string.title_all)
-                mRepo!!.queryUsageStatisticsForType(FilterType.ALL)
-            }
+    private fun setupRefreshLayout() {
+        refreshLayout.setOnRefreshListener {
+            RefreshRepositoryTask(this).execute()
         }
-        usageHeading.text = headingText + ": " + mRepo!!.totalTypeForFilter
+
+        // Configure the refreshing colors
+        refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark)
+    }
+
+    override fun refreshFinished() {
+        // Stop refresh animation
+        refreshLayout.isRefreshing = false
+
+        // Update heading above list
+        usageHeading.text = mRepo!!.getTotalTimeHeading
+
+        // Update list with values
         mUsageAdapter!!.notifyDataSetChanged()
+    }
+
+    override fun getCurrentContext(): Context {
+        return this
     }
 
 }

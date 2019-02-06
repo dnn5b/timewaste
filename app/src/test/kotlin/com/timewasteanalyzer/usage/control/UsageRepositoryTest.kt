@@ -5,7 +5,6 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers.any
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
@@ -23,8 +22,6 @@ class UsageRepositoryTest {
     @Mock
     private lateinit var usageEvents: UsageEvents
 
-    private var events: List<UsageEvents.Event> = ArrayList()
-
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
@@ -39,9 +36,11 @@ class UsageRepositoryTest {
     fun queryUsageStatisticsForType() {
 //        Mockito.`when`(usageEvents.hasNextEvent()).thenReturn(true, true, false)
 
-        tut.queryUsageStatisticsForType(FilterType.WEEK)
+        tut.queryUsageStatisticsForCurrentType(FilterType.WEEK)
 
         var result = tut.usageList
-
     }
+
+    // Workaround for null values in Mockito. Kotlin doesn't accept that.
+    fun <T> any(): T = Mockito.any<T>()
 }
