@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), RefreshDoneCallback {
                 else -> false
             }
             // Start refresh animation
-            refreshLayout.isRefreshing = false
+            refreshLayout.isRefreshing = true
 
             // Start update of repository
             RefreshRepositoryTask(this).execute()
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity(), RefreshDoneCallback {
         }
 
         // Configure the refreshing colors
-        refreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark)
+        refreshLayout.setColorSchemeResources(R.color.colorAccent)
     }
 
     override fun refreshFinished() {
