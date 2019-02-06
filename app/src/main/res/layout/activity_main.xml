@@ -18,7 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:padding="@dimen/default_padding"
-            android:textColor="@color/black"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@color/colorPrimaryDark"
             />
 
         <android.support.v7.widget.RecyclerView
