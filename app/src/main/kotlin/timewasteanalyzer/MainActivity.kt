@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                     fragmentToAdd = mListFragment
                     true
                 }
-                R.id.navigation_all -> {
+                R.id.navigation_settings -> {
                     fragmentToAdd = mSettingsFragment
                     true
                 }

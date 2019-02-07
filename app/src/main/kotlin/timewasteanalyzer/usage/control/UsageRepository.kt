@@ -7,6 +7,7 @@ import android.content.Context
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.model.AppUsage
 import timewasteanalyzer.util.SingletonHolder
+import java.time.LocalDateTime
 import java.util.*
 
 class UsageRepository private constructor(context: Context) {
@@ -32,7 +33,6 @@ class UsageRepository private constructor(context: Context) {
             var filterText = when (mCurrentFilterType) {
                 FilterType.DAY -> R.string.title_today
                 FilterType.WEEK -> R.string.title_week
-                FilterType.ALL -> R.string.title_all
             }
 
             val seconds = (phoneUsageTotal / 1000).toInt() % 60
@@ -61,14 +61,10 @@ class UsageRepository private constructor(context: Context) {
 
         val now = System.currentTimeMillis()
         var startTime: Long = when (mCurrentFilterType) {
-            // TODO filter from 0:00 instead of 24h
-            FilterType.DAY -> now - 1000 * 3600 * 24 // querying last day
+            // querying hours of current day
+            FilterType.DAY -> now - 1000 * 3600 * LocalDateTime.now().hour
 
-            // TODO test whether last weeks events are queried like this
             FilterType.WEEK -> now - 1000 * 3600 * 24 * 7
-
-            // TODO test whether all events are queried like this
-            FilterType.ALL -> 0
         }
 
         // Query events and initialize repository data
