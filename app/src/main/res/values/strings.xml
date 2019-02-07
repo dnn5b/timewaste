@@ -9,4 +9,5 @@
 
     <!-- Permission -->
     <string name="grant_permission_message">Please grant the usage data permission</string>
+
 </resources>

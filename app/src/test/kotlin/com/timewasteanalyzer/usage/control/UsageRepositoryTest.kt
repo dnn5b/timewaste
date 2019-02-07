@@ -38,7 +38,7 @@ class UsageRepositoryTest {
 
         tut.queryUsageStatisticsForCurrentType(FilterType.WEEK)
 
-        var result = tut.usageList
+        var result = tut.mUsageList
     }
 
     // Workaround for null values in Mockito. Kotlin doesn't accept that.

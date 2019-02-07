@@ -1,103 +1,81 @@
 package com.timewasteanalyzer
 
 
-import android.content.Context
+import android.app.Fragment
+import android.app.FragmentManager
+import android.app.FragmentTransaction
+import android.app.ListFragment
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import com.timewasteanalyzer.permission.PermissionRequester
 import com.timewasteanalyzer.usage.control.FilterType
-import com.timewasteanalyzer.usage.control.UsageRepository
-import com.timewasteanalyzer.usage.list.UsageAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import timewasteanalyzer.usage.refresh.RefreshDoneCallback
-import timewasteanalyzer.usage.refresh.RefreshRepositoryTask
+import timewasteanalyzer.settings.SettingsFragment
+import timewasteanalyzer.usage.list.UsageListFragment
 
 
-class MainActivity : AppCompatActivity(), RefreshDoneCallback {
+class MainActivity : AppCompatActivity() {
 
-    /** The repository for accessing the usage data. */
-    private var mRepo: UsageRepository? = null
-
-    /** Adapter to show usages in RecyclerView. */
-    private var mUsageAdapter: RecyclerView.Adapter<*>? = null
+    private lateinit var mListFragment: UsageListFragment
+    private lateinit var mSettingsFragment: SettingsFragment
+    private lateinit var mCurrentFragment: Fragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mRepo = UsageRepository.getInstance(this)
+        mListFragment = UsageListFragment()
+        mSettingsFragment = SettingsFragment()
 
-        setupRecyclerView()
-        setupRefreshLayout()
         setupBottomNavigation()
 
         if (PermissionRequester(this).checkForPermission()) {
-            RefreshRepositoryTask(this).execute()
+            showFragment(mListFragment)
         }
     }
 
-    private fun setupRecyclerView() {
-        val layoutManager = LinearLayoutManager(this)
-        usageRecyclerview.layoutManager = layoutManager
-
-        // Layout size won't change so performance can be improved with fix size
-        usageRecyclerview.setHasFixedSize(true)
-
-        // Add adapter containing the current list of usages
-        mUsageAdapter = UsageAdapter(mRepo!!.usageList)
-        usageRecyclerview.adapter = mUsageAdapter
-    }
-
     private fun setupBottomNavigation() {
+        var fragmentToAdd: Fragment? = null
+
         navigation.setOnNavigationItemSelectedListener { item ->
             var isHandled = when (item.itemId) {
                 R.id.navigation_today -> {
-                    mRepo!!.setCurrentType(FilterType.DAY)
+                    mListFragment.setFilterType(FilterType.DAY)
+                    fragmentToAdd = mListFragment
                     true
                 }
                 R.id.navigation_week -> {
-                    mRepo!!.setCurrentType(FilterType.WEEK)
+                    mListFragment.setFilterType(FilterType.WEEK)
+                    fragmentToAdd = mListFragment
                     true
                 }
                 R.id.navigation_all -> {
-                    mRepo!!.setCurrentType(FilterType.ALL)
+                    fragmentToAdd = mSettingsFragment
                     true
                 }
                 else -> false
             }
-            // Start refresh animation
-            refreshLayout.isRefreshing = true
 
-            // Start update of repository
-            RefreshRepositoryTask(this).execute()
+            if (fragmentToAdd != mCurrentFragment) {
+                showFragment(fragmentToAdd!!)
+            }
+
             isHandled
         }
     }
 
-    private fun setupRefreshLayout() {
-        refreshLayout.setOnRefreshListener {
-            RefreshRepositoryTask(this).execute()
+    private fun showFragment(fragment: Fragment) {
+        fragmentManager.inTransaction {
+            if (::mCurrentFragment.isInitialized) {
+                remove(mCurrentFragment)
+            }
+            add(R.id.fragmentContainer, fragment)
         }
-
-        // Configure the refreshing colors
-        refreshLayout.setColorSchemeResources(R.color.colorAccent)
+        mCurrentFragment = fragment
     }
 
-    override fun refreshFinished() {
-        // Stop refresh animation
-        refreshLayout.isRefreshing = false
-
-        // Update heading above list
-        usageHeading.text = mRepo!!.getTotalTimeHeading
-
-        // Update list with values
-        mUsageAdapter!!.notifyDataSetChanged()
-    }
-
-    override fun getCurrentContext(): Context {
-        return this
+    private inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+        beginTransaction().func().commit()
     }
 
 }

@@ -1,14 +1,15 @@
 package timewasteanalyzer.usage.refresh
 
 
+import android.content.Context
 import android.os.AsyncTask
 import com.timewasteanalyzer.usage.control.UsageRepository
 
 
-class RefreshRepositoryTask(private val mCallback: RefreshDoneCallback) : AsyncTask<Void, Void, Boolean>() {
+class RefreshRepositoryTask(private val mContext: Context, private val mCallback: RefreshDoneCallback) : AsyncTask<Void, Void, Boolean>() {
 
     override fun doInBackground(vararg params: Void?): Boolean {
-        UsageRepository.getInstance(mCallback.getCurrentContext()).queryUsageStatisticsForCurrentType()
+        UsageRepository.getInstance(mContext).queryUsageStatisticsForCurrentType()
         return true
     }
 
@@ -16,4 +17,5 @@ class RefreshRepositoryTask(private val mCallback: RefreshDoneCallback) : AsyncT
         super.onPostExecute(result)
         mCallback.refreshFinished()
     }
+
 }

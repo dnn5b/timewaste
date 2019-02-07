@@ -17,8 +17,7 @@ class UsageRepository private constructor(context: Context) {
     private var mAllEvents: MutableList<UsageEvents.Event> = ArrayList()
     private var mContext: Context = context
     private var phoneUsageTotal: Long = 0
-
-    private lateinit var mCurrentFilterType: FilterType
+    private var mCurrentFilterType: FilterType
 
     init {
         mContext = context
@@ -47,7 +46,7 @@ class UsageRepository private constructor(context: Context) {
                     .toString()
         }
 
-    val usageList: List<AppUsage>
+    val mUsageList: List<AppUsage>
         get() {
             return mAppUsageList
         }
@@ -139,8 +138,17 @@ class UsageRepository private constructor(context: Context) {
         mAppUsageList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
     }
 
+    /**
+     * Setter for {@link #mCurrentFilterType}.
+     */
     fun setCurrentType(currentFilter: FilterType) {
         mCurrentFilterType = currentFilter
     }
 
+    /**
+     * Deletes all entries from {@link #mAppUsageList}.
+     */
+    fun clear() {
+        mAppUsageList.clear()
+    }
 }
