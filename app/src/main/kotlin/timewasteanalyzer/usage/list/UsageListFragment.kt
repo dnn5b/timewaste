@@ -1,6 +1,5 @@
 package timewasteanalyzer.usage.list
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -13,10 +12,10 @@ import com.timewasteanalyzer.usage.control.FilterType
 import com.timewasteanalyzer.usage.control.UsageRepository
 import com.timewasteanalyzer.usage.list.UsageAdapter
 import kotlinx.android.synthetic.main.fragment_appusage_list.*
-import timewasteanalyzer.usage.refresh.RefreshDoneCallback
-import timewasteanalyzer.usage.refresh.RefreshRepositoryTask
+import timewasteanalyzer.refresh.RefreshStatusCallback
+import timewasteanalyzer.refresh.RefreshableFragment
 
-class UsageListFragment : Fragment(), RefreshDoneCallback {
+class UsageListFragment : RefreshableFragment(), RefreshStatusCallback {
 
     /** The repository for accessing the usage data. */
     private lateinit var mRepo: UsageRepository
@@ -26,55 +25,63 @@ class UsageListFragment : Fragment(), RefreshDoneCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.fragment_appusage_list, container, false)
-
-        mRepo = UsageRepository.getInstance(activity!!)
-        mRepo.setCurrentType(FilterType.DAY)
-
-        return view
+        return inflater.inflate(R.layout.fragment_appusage_list, container, false)
     }
 
+    /**
+     * Initializes the {@link #mRepo} and {@link recyclerView} after the view of this fragment
+     * has been created.
+     */
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (!::mRepo.isInitialized) {
+            // Initialize the repo if this fragment hasn't been used yet
+            mRepo = UsageRepository.getInstance(activity!!)
+            mRepo.setCurrentType(FilterType.DAY)
+        }
+
         setupRecyclerView()
-        setupRefreshLayout()
     }
 
+
+    /**
+     * Triggers the refresh of this view, after it has been attached to the view.
+     */
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        // Start refresh animation
-//        refreshLayout.isRefreshing = true
-
         // Start update of repository
-        RefreshRepositoryTask(activity,this).execute()
+        RefreshUsageListTask(activity, this).execute()
     }
 
+    /**
+     * Handles the cleanup of the fragment if it's removed from the view.
+     */
     override fun onDetach() {
         super.onDetach()
 
+        // Repo has to be cleared to prevent an "Inconsistency detected; invalid item position"
+        // error when switching fast between different filters
         mRepo.clear()
     }
 
+    /**
+     * Sets the filter type of the usage list and triggers the update of it.
+     */
     fun setFilterType(filterType: FilterType) {
         mRepo.setCurrentType(filterType)
 
-        // Start update of repository
+        // Start update of repository if filter type has been switched while this fragment
+        // is already attached.
         if (activity != null) {
-            RefreshRepositoryTask(activity,this).execute()
+            refresh()
         }
     }
 
-    private fun setupRefreshLayout() {
-        refreshLayout.setOnRefreshListener {
-            RefreshRepositoryTask(activity, this).execute()
-        }
-
-        // Configure the refreshing colors
-        refreshLayout.setColorSchemeResources(R.color.colorAccent)
-    }
-
+    /**
+     * Initializes
+     */
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(activity)
         usageRecyclerview.layoutManager = layoutManager
@@ -83,21 +90,37 @@ class UsageListFragment : Fragment(), RefreshDoneCallback {
         usageRecyclerview.setHasFixedSize(true)
 
         // Add adapter containing the current list of usages
-        mUsageAdapter = UsageAdapter(mRepo!!.mUsageList)
+        mUsageAdapter = UsageAdapter(mRepo.mUsageList)
         usageRecyclerview.adapter = mUsageAdapter
     }
 
+    /**
+     * Empty implementation of the callback. Only {@link #refreshFinished} is needed.
+     */
+    override fun refreshStarted() {}
+
+    /**
+     * Updates the list and heading after the data has been updated. Will also call
+     * {@link RefreshStatusCallback#refreshFinished} of the parent activity, if the
+     * interface is implemented by the activity.
+     */
     override fun refreshFinished() {
-        // Stop refresh animation
-        refreshLayout.isRefreshing = false
+        // Update heading
+        usageHeading.text = mRepo.getTotalTimeHeading
 
-        // Update heading above list
-        usageHeading.text = mRepo!!.getTotalTimeHeading
+        // Update list with updated data
+        mUsageAdapter.notifyDataSetChanged()
 
-        // Viewpool has to be cleared to prevent an "Inconsistency detected; invalid item position" error
-//        usageRecyclerview.recycledViewPool.clear()
+        // If the parent Activity implements also the refresh callback it should be notified as well
+        if (activity is RefreshStatusCallback) {
+            (activity as RefreshStatusCallback).refreshFinished()
+        }
+    }
 
-        // Update list with values
-        mUsageAdapter!!.notifyDataSetChanged()
+    /**
+     * Refresh this fragment by executing a {@link RefreshUsageListTask}.
+     */
+    override fun refresh() {
+        RefreshUsageListTask(activity, this).execute()
     }
 }
