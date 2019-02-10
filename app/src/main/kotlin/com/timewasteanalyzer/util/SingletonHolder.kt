@@ -1,4 +1,4 @@
-package timewasteanalyzer.util
+package com.timewasteanalyzer.util
 
 
 /**

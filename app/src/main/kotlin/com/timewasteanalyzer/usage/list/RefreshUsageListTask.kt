@@ -1,10 +1,10 @@
-package timewasteanalyzer.usage.list
+package com.timewasteanalyzer.usage.list
 
 
 import android.content.Context
 import android.os.AsyncTask
 import com.timewasteanalyzer.usage.control.UsageRepository
-import timewasteanalyzer.refresh.RefreshStatusCallback
+import com.timewasteanalyzer.refresh.RefreshStatusCallback
 
 
 class RefreshUsageListTask(private val mContext: Context, private val mCallback: RefreshStatusCallback) : AsyncTask<Void, Void, Boolean>() {

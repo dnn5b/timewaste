@@ -2,26 +2,32 @@ package com.timewasteanalyzer.usage.model
 
 
 import android.content.Context
+import android.content.pm.PackageManager
+import io.mockk.MockKAnnotations
+import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import junit.framework.Assert.assertEquals
 
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
-import org.mockito.MockitoAnnotations
 
 
 class AppUsageTest {
 
     private var tut: AppUsage? = null
 
-    @Mock
-    internal var mockedContext: Context? = null
+    @MockK
+    lateinit var mockedContext: Context
+
+    @MockK
+    lateinit var mockedPackageManager: PackageManager
 
     @Before
     fun setup() {
-        MockitoAnnotations.initMocks(this)
+        MockKAnnotations.init(this, relaxUnitFun = true)
 
-        tut = AppUsage(mockedContext!!, "")
+        every { mockedContext.getPackageManager() } returns mockedPackageManager
+        tut = AppUsage(mockedContext, "")
     }
 
     @Test

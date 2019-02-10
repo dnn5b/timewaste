@@ -6,7 +6,7 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.model.AppUsage
-import timewasteanalyzer.util.SingletonHolder
+import com.timewasteanalyzer.util.SingletonHolder
 import java.time.LocalDateTime
 import java.util.*
 

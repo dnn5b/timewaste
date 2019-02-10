@@ -1,4 +1,4 @@
-package timewasteanalyzer.settings
+package com.timewasteanalyzer.settings
 
 
 import android.app.Fragment

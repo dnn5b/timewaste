@@ -1,4 +1,4 @@
-package timewasteanalyzer.usage.list
+package com.timewasteanalyzer.usage.list
 
 import android.content.Context
 import android.os.Bundle
@@ -10,10 +10,9 @@ import android.view.ViewGroup
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.control.FilterType
 import com.timewasteanalyzer.usage.control.UsageRepository
-import com.timewasteanalyzer.usage.list.UsageAdapter
 import kotlinx.android.synthetic.main.fragment_appusage_list.*
-import timewasteanalyzer.refresh.RefreshStatusCallback
-import timewasteanalyzer.refresh.RefreshableFragment
+import com.timewasteanalyzer.refresh.RefreshStatusCallback
+import com.timewasteanalyzer.refresh.RefreshableFragment
 
 class UsageListFragment : RefreshableFragment(), RefreshStatusCallback {
 

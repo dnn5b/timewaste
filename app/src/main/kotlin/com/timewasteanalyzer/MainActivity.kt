@@ -7,12 +7,12 @@ import android.app.FragmentTransaction
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.timewasteanalyzer.permission.PermissionRequester
+import com.timewasteanalyzer.refresh.RefreshStatusCallback
+import com.timewasteanalyzer.refresh.RefreshableFragment
+import com.timewasteanalyzer.settings.SettingsFragment
 import com.timewasteanalyzer.usage.control.FilterType
+import com.timewasteanalyzer.usage.list.UsageListFragment
 import kotlinx.android.synthetic.main.activity_main.*
-import timewasteanalyzer.refresh.RefreshStatusCallback
-import timewasteanalyzer.refresh.RefreshableFragment
-import timewasteanalyzer.settings.SettingsFragment
-import timewasteanalyzer.usage.list.UsageListFragment
 
 
 class MainActivity : AppCompatActivity(), RefreshStatusCallback {

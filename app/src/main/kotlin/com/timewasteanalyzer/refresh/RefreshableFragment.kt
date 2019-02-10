@@ -1,4 +1,4 @@
-package timewasteanalyzer.refresh
+package com.timewasteanalyzer.refresh
 
 import android.app.Fragment
 

@@ -21,11 +21,11 @@ class PermissionRequester(private val mActivity: Activity) {
         val mode = appOps.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, android.os.Process.myUid(), mActivity
                 .packageName)
 
-        if (mode == AppOpsManager.MODE_DEFAULT) {
+        granted = if (mode == AppOpsManager.MODE_DEFAULT) {
             // If mode is default further permission check is needed
-            granted = mActivity.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+            mActivity.checkCallingOrSelfPermission(android.Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
         } else {
-            granted = mode == AppOpsManager.MODE_ALLOWED
+            mode == AppOpsManager.MODE_ALLOWED
         }
 
         if (!granted) {

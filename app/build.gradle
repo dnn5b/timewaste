@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.timewasteanalyzer"
+        applicationId "com.com.timewasteanalyzer"
         minSdkVersion 26
         targetSdkVersion 27
         versionCode 1
@@ -22,14 +23,12 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
-
     sourceSets {
         main.kotlin.srcDirs = ['src/main/kotlin', 'src/main/java']
         main.java.srcDirs = ['src/main/kotlin', 'src/main/java']
         test.kotlin.srcDirs = ['src/test/kotlin', 'src/test/java']
         test.java.srcDirs = ['src/test/kotlin', 'src/test/java']
     }
-
 }
 
 dependencies {
@@ -37,16 +36,16 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
     implementation 'com.android.support:support-v4:27.1.1'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
+
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-all:1.8.4'
+    testImplementation 'io.mockk:mockk:1.9'
 
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
 repositories {
     mavenCentral()
     jcenter()
