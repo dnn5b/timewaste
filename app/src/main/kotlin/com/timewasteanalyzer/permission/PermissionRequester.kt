@@ -33,6 +33,9 @@ class PermissionRequester(private val mActivity: Activity) {
             Toast.makeText(mActivity, R.string.grant_permission_message, Toast.LENGTH_LONG)
                     .show()
             mActivity.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+
+            // Workaround so Activity is initialized after granting the permission is to stop it now
+            mActivity.finish()
         }
 
         return granted
