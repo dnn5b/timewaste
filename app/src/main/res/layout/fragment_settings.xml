@@ -16,4 +16,25 @@
         android:text="@string/settings_heading"
         />
 
+
+    <TextView
+        android:id="@+id/headingTimeline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settingsHeading"
+        android:layout_marginTop="@dimen/default_padding"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/black"
+        android:text="@string/settings_timeline"
+        />
+
+    <Switch
+        android:id="@+id/timelineSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/headingTimeline"
+        android:layout_alignParentEnd="true"
+        android:enabled="true"
+        />
+
 </RelativeLayout>

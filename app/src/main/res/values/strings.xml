@@ -12,5 +12,6 @@
 
     <!-- Settings -->
     <string name="settings_heading">Settings</string>
+    <string name="settings_timeline">Use timeline</string>
 
 </resources>
