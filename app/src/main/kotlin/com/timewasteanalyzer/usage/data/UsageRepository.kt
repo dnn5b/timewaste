@@ -53,8 +53,6 @@ class UsageRepository private constructor(context: Context) {
 
     /**
      * Queries the usage data for the passed [FilterType].
-     *
-     * @param filterType the current [FilterType]
      */
     fun queryUsageStatisticsForCurrentType() {
         resetFormerData()

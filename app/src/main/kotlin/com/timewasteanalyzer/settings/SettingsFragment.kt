@@ -31,9 +31,8 @@ class SettingsFragment : Fragment() {
     }
 
     private fun initializeTimelineSetting() {
-        val ddf =  mPrefs.getBooleanFromPref(PREF_USE_TIMELINE)
         timelineSwitch.isChecked = mPrefs.getBooleanFromPref(PREF_USE_TIMELINE)
-        timelineSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        timelineSwitch.setOnCheckedChangeListener { _, isChecked ->
             mPrefs.saveBooleanToPrefs(PREF_USE_TIMELINE, isChecked)
         }
     }

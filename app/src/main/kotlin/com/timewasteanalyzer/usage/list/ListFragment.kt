@@ -8,12 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.usage.data.FilterType
-import com.timewasteanalyzer.usage.data.UsageRepository
-import kotlinx.android.synthetic.main.fragment_appusage_list.*
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
+import com.timewasteanalyzer.usage.data.FilterType
 import com.timewasteanalyzer.usage.data.RefreshUsageListTask
+import com.timewasteanalyzer.usage.data.UsageRepository
+import kotlinx.android.synthetic.main.fragment_list.*
 
 class ListFragment : RefreshableFragment(), RefreshStatusCallback {
 
@@ -25,7 +25,7 @@ class ListFragment : RefreshableFragment(), RefreshStatusCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_appusage_list, container, false)
+        return inflater.inflate(R.layout.fragment_list, container, false)
     }
 
     /**
@@ -35,15 +35,13 @@ class ListFragment : RefreshableFragment(), RefreshStatusCallback {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize the repo if this fragment hasn't been used yet
         if (!::mRepo.isInitialized) {
-            // Initialize the repo if this fragment hasn't been used yet
             mRepo = UsageRepository.getInstance(activity!!)
-            mRepo.setCurrentType(FilterType.DAY)
         }
 
         setupRecyclerView()
     }
-
 
     /**
      * Triggers the refresh of this view, after it has been attached to the view.
@@ -67,20 +65,7 @@ class ListFragment : RefreshableFragment(), RefreshStatusCallback {
     }
 
     /**
-     * Sets the filter type of the usage list and triggers the update of it.
-     */
-    fun setFilterType(filterType: FilterType) {
-        mRepo.setCurrentType(filterType)
-
-        // Start update of repository if filter type has been switched while this fragment
-        // is already attached.
-        if (activity != null) {
-            refresh()
-        }
-    }
-
-    /**
-     * Initializes
+     * Initializes the {@link #usageRecyclerview}.
      */
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(activity)
@@ -90,7 +75,7 @@ class ListFragment : RefreshableFragment(), RefreshStatusCallback {
         usageRecyclerview.setHasFixedSize(true)
 
         // Add adapter containing the current list of usages
-        mUsageAdapter = TimelineAdapter(mRepo.mUsageList)
+        mUsageAdapter = ListAdapter(mRepo.mUsageList)
         usageRecyclerview.adapter = mUsageAdapter
     }
 

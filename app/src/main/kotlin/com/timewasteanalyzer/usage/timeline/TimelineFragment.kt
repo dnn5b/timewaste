@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.data.FilterType
 import com.timewasteanalyzer.usage.data.UsageRepository
-import kotlinx.android.synthetic.main.fragment_appusage_list.*
+import kotlinx.android.synthetic.main.fragment_list.*
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
 import com.timewasteanalyzer.usage.data.RefreshUsageListTask
@@ -25,7 +25,7 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_appusage_list, container, false)
+        return inflater.inflate(R.layout.fragment_timeline, container, false)
     }
 
     /**
@@ -35,15 +35,13 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize the repo if this fragment hasn't been used yet
         if (!::mRepo.isInitialized) {
-            // Initialize the repo if this fragment hasn't been used yet
             mRepo = UsageRepository.getInstance(activity!!)
-            mRepo.setCurrentType(FilterType.DAY)
         }
 
         setupRecyclerView()
     }
-
 
     /**
      * Triggers the refresh of this view, after it has been attached to the view.
@@ -67,20 +65,7 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
     }
 
     /**
-     * Sets the filter type of the usage list and triggers the update of it.
-     */
-    fun setFilterType(filterType: FilterType) {
-        mRepo.setCurrentType(filterType)
-
-        // Start update of repository if filter type has been switched while this fragment
-        // is already attached.
-        if (activity != null) {
-            refresh()
-        }
-    }
-
-    /**
-     * Initializes
+     * Initializes the timeline RecyclerView.
      */
     private fun setupRecyclerView() {
         val layoutManager = LinearLayoutManager(activity)

@@ -7,7 +7,7 @@ import com.timewasteanalyzer.util.SingletonHolder
 
 class PreferencesRepository private constructor(context: Context) {
 
-    private var mSharedPrefs: SharedPreferences = context?.getSharedPreferences("timeanalyzer_preferences", Context.MODE_PRIVATE)
+    private var mSharedPrefs: SharedPreferences = context.getSharedPreferences("timeanalyzer_preferences", Context.MODE_PRIVATE)
 
     companion object : SingletonHolder<PreferencesRepository, Context>(::PreferencesRepository)
 
