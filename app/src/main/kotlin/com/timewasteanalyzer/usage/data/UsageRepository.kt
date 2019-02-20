@@ -1,4 +1,4 @@
-package com.timewasteanalyzer.usage.control
+package com.timewasteanalyzer.usage.data
 
 
 import android.app.usage.UsageEvents

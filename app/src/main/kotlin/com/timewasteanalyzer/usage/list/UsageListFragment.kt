@@ -8,11 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.usage.control.FilterType
-import com.timewasteanalyzer.usage.control.UsageRepository
+import com.timewasteanalyzer.usage.data.FilterType
+import com.timewasteanalyzer.usage.data.UsageRepository
 import kotlinx.android.synthetic.main.fragment_appusage_list.*
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
+import com.timewasteanalyzer.usage.data.RefreshUsageListTask
 
 class UsageListFragment : RefreshableFragment(), RefreshStatusCallback {
 

@@ -10,7 +10,7 @@ import com.timewasteanalyzer.permission.PermissionRequester
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
 import com.timewasteanalyzer.settings.SettingsFragment
-import com.timewasteanalyzer.usage.control.FilterType
+import com.timewasteanalyzer.usage.data.FilterType
 import com.timewasteanalyzer.usage.list.UsageListFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
