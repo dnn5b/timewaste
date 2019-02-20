@@ -6,12 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.usage.model.AppUsage
 import com.timewasteanalyzer.util.Utility.isEmpty
 import kotlinx.android.synthetic.main.layout_usage_list_item.view.*
 
 
-class ListAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListAdapter(private val mUsageList: List<ListItemData>) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val v = LayoutInflater.from(parent.context)
@@ -32,13 +31,13 @@ class ListAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapter
      * The ViewHolder for a usage list item.
      */
     class ListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bindUsage(usage: AppUsage) {
-            itemView.itemIcon.setImageDrawable(usage.appIcon)
-            itemView.itemName.text = if (isEmpty(usage.appName)) usage.packageName else usage.appName
-            itemView.itemCountOpen.text = "Opened: " + usage.launchCount
+        fun bindUsage(usage: ListItemData) {
+            itemView.itemIcon.setImageDrawable(usage.mAppIcon)
+            itemView.itemName.text = if (isEmpty(usage.mAppName)) usage.packageName else usage.mAppName
+            itemView.itemCountOpen.text = "Opened: " + usage.mLaunchCount
             itemView.itemForegroundTime.text = usage.foregroundTimeString
-            itemView.itemPercentage.text = usage.percent.toString() + "%"
-            itemView.progressbar.progress = usage.percent
+            itemView.itemPercentage.text = usage.mPercent.toString() + "%"
+            itemView.progressbar.progress = usage.mPercent
         }
     }
 }

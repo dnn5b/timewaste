@@ -5,16 +5,16 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.usage.model.AppUsage
+import com.timewasteanalyzer.usage.list.ListItemData
 import com.timewasteanalyzer.util.SingletonHolder
 import java.time.LocalDateTime
 import java.util.*
 
 class UsageRepository private constructor(context: Context) {
 
-    private var mAppUsageList: MutableList<AppUsage> = ArrayList()
+    private var mListItemDataList: MutableList<ListItemData> = ArrayList()
     private var mUsageStatsManager: UsageStatsManager
-    private var mAppUsageMap: HashMap<String, AppUsage> = HashMap()
+    private var mListItemDataMap: HashMap<String, ListItemData> = HashMap()
     private var mAllEvents: MutableList<UsageEvents.Event> = ArrayList()
     private var mContext: Context = context
     private var phoneUsageTotal: Long = 0
@@ -46,9 +46,9 @@ class UsageRepository private constructor(context: Context) {
                     .toString()
         }
 
-    val mUsageList: List<AppUsage>
+    val mUsageList: List<ListItemData>
         get() {
-            return mAppUsageList
+            return mListItemDataList
         }
 
     /**
@@ -78,7 +78,7 @@ class UsageRepository private constructor(context: Context) {
             // Calculate opened counter
             if (event.packageName != event2.packageName && event2.eventType == 1) {
                 // if true, E1 (launch event of an app) app launched
-                mAppUsageMap[event2.packageName]?.increaseLaunchCount()
+                mListItemDataMap[event2.packageName]?.increaseLaunchCount()
             }
 
             // UsageTime of apps in time range
@@ -88,25 +88,25 @@ class UsageRepository private constructor(context: Context) {
                 phoneUsageTotal += diff
 
                 // Update current usage
-                val currentUsage = mAppUsageMap[event.packageName]
+                val currentUsage = mListItemDataMap[event.packageName]
                 currentUsage?.addTimeInForeground(diff)
             }
         }
 
         // Percentages have to updated after total phone usage is calculate based on all events.
-        mAppUsageMap.values.forEach { it.updatePercentage(phoneUsageTotal) }
+        mListItemDataMap.values.forEach { it.updatePercentage(phoneUsageTotal) }
 
-        updateUsageList(mAppUsageMap.values)
+        updateUsageList(mListItemDataMap.values)
     }
 
     private fun resetFormerData() {
         phoneUsageTotal = 0
-        mAppUsageMap = HashMap()
+        mListItemDataMap = HashMap()
         mAllEvents = ArrayList()
     }
 
     /**
-     * Resets the [.mAppUsageMap] and [.mAllEvents]. Afterwards the data is updated based on the passed
+     * Resets the [.mListItemDataMap] and [.mAllEvents]. Afterwards the data is updated based on the passed
      * [UsageEvents].
      *
      * @param usageEvents the queried [UsageEvents]
@@ -121,15 +121,15 @@ class UsageRepository private constructor(context: Context) {
 
                 // Save usages into map
                 val key = currentEvent.packageName
-                if (mAppUsageMap[key] == null)
-                    mAppUsageMap[key] = AppUsage(mContext, key)
+                if (mListItemDataMap[key] == null)
+                    mListItemDataMap[key] = ListItemData(mContext, key)
             }
         }
     }
 
-    private fun updateUsageList(values: Collection<AppUsage>) {
-        mAppUsageList.clear()
-        mAppUsageList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
+    private fun updateUsageList(values: Collection<ListItemData>) {
+        mListItemDataList.clear()
+        mListItemDataList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
     }
 
     /**
@@ -140,9 +140,9 @@ class UsageRepository private constructor(context: Context) {
     }
 
     /**
-     * Deletes all entries from {@link #mAppUsageList}.
+     * Deletes all entries from {@link #mListItemDataList}.
      */
     fun clear() {
-        mAppUsageList.clear()
+        mListItemDataList.clear()
     }
 }

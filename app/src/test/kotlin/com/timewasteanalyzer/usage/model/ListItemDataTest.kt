@@ -3,6 +3,7 @@ package com.timewasteanalyzer.usage.model
 
 import android.content.Context
 import android.content.pm.PackageManager
+import com.timewasteanalyzer.usage.list.ListItemData
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -12,9 +13,9 @@ import org.junit.Before
 import org.junit.Test
 
 
-class AppUsageTest {
+class ListItemDataTest {
 
-    private var tut: AppUsage? = null
+    private var tut: ListItemData? = null
 
     @MockK
     lateinit var mockedContext: Context
@@ -27,7 +28,7 @@ class AppUsageTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
 
         every { mockedContext.getPackageManager() } returns mockedPackageManager
-        tut = AppUsage(mockedContext, "")
+        tut = ListItemData(mockedContext, "")
     }
 
     @Test
@@ -56,7 +57,7 @@ class AppUsageTest {
         tut!!.addTimeInForeground(11561)
         tut!!.updatePercentage(115610)
 
-        assertEquals(10, tut!!.percent)
+        assertEquals(10, tut!!.mPercent)
     }
 
     @Test
@@ -64,7 +65,7 @@ class AppUsageTest {
         tut!!.addTimeInForeground(10)
         tut!!.updatePercentage(20)
 
-        assertEquals(50, tut!!.percent)
+        assertEquals(50, tut!!.mPercent)
     }
 
     @Test
@@ -72,6 +73,6 @@ class AppUsageTest {
         tut!!.addTimeInForeground(115618)
         tut!!.updatePercentage(115618)
 
-        assertEquals(100, tut!!.percent)
+        assertEquals(100, tut!!.mPercent)
     }
 }

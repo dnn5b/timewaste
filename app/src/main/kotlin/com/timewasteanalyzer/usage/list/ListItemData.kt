@@ -1,4 +1,4 @@
-package com.timewasteanalyzer.usage.model
+package com.timewasteanalyzer.usage.list
 
 
 import android.content.Context
@@ -7,21 +7,21 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 
 
-class AppUsage(context: Context, val packageName: String) {
+class ListItemData(context: Context, val packageName: String) {
 
-    var appIcon: Drawable? = null
+    var mAppIcon: Drawable? = null
         private set
 
-    var appName: String? = null
+    var mAppName: String? = null
         private set
 
     var msInForeground: Long = 0
         private set
 
-    var launchCount: Int = 0
+    var mLaunchCount: Int = 0
         private set
 
-    var percent: Int = 0
+    var mPercent: Int = 0
         private set
 
     val foregroundTimeString: String
@@ -39,19 +39,18 @@ class AppUsage(context: Context, val packageName: String) {
         val ai: ApplicationInfo
         try {
             ai = pm.getApplicationInfo(packageName, 0)
-            this.appName = pm.getApplicationLabel(ai) as String
-            this.appIcon = pm.getApplicationIcon(ai)
+            this.mAppName = pm.getApplicationLabel(ai) as String
+            this.mAppIcon = pm.getApplicationIcon(ai)
 
         } catch (e: PackageManager.NameNotFoundException) {
             // TODO handle exception
         } catch (e: Exception) {
             // TODO handle exception
         }
-
     }
 
     fun increaseLaunchCount() {
-        launchCount++
+        mLaunchCount++
     }
 
     fun addTimeInForeground(diff: Long) {
@@ -59,6 +58,6 @@ class AppUsage(context: Context, val packageName: String) {
     }
 
     fun updatePercentage(total: Long) {
-        this.percent = (msInForeground * 100.0 / total + 0.5).toInt()
+        this.mPercent = (msInForeground * 100.0 / total + 0.5).toInt()
     }
 }

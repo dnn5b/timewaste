@@ -10,8 +10,19 @@
         android:layout_width="5dp"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_alignParentTop="true"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorAccent"
+        />
+
+    <TextView
+        android:id="@+id/itemDuration"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/timelineBar"
+        android:layout_marginStart="30dp"
+        android:scaleType="fitStart"
         />
 
     <ImageView

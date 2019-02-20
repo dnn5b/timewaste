@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.usage.model.AppUsage
 import kotlinx.android.synthetic.main.layout_usage_list_item.view.*
 
 
-class TimelineAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapter<TimelineAdapter.UsageViewHolder>() {
+class TimelineAdapter(private val mUsageList: List<ListItemData>) : RecyclerView.Adapter<TimelineAdapter.UsageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsageViewHolder {
         val v = LayoutInflater.from(parent.context)
@@ -31,8 +30,8 @@ class TimelineAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Ada
      * The ViewHolder for a usage list item.
      */
     class UsageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        fun bindUsage(usage: AppUsage) {
-            itemView.itemIcon.setImageDrawable(usage.appIcon)
+        fun bindUsage(usage: ListItemData) {
+            itemView.itemIcon.setImageDrawable(usage.mAppIcon)
         }
     }
 }
