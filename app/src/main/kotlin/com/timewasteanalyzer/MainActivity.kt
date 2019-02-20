@@ -11,13 +11,13 @@ import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
 import com.timewasteanalyzer.settings.SettingsFragment
 import com.timewasteanalyzer.usage.data.FilterType
-import com.timewasteanalyzer.usage.list.UsageListFragment
+import com.timewasteanalyzer.usage.list.TimelineFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), RefreshStatusCallback {
 
-    private lateinit var mListFragment: UsageListFragment
+    private lateinit var mListFragment: TimelineFragment
     private lateinit var mSettingsFragment: SettingsFragment
     private lateinit var mCurrentFragment: Fragment
 
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), RefreshStatusCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mListFragment = UsageListFragment()
+        mListFragment = TimelineFragment()
         mSettingsFragment = SettingsFragment()
 
         setupBottomNavigation()

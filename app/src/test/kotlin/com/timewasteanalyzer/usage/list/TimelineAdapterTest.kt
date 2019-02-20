@@ -5,7 +5,7 @@ import io.mockk.mockkClass
 import org.junit.Assert
 import org.junit.Test
 
-class UsageAdapterTest {
+class TimelineAdapterTest {
 
     @Test
     fun getItemCount() {
@@ -14,7 +14,7 @@ class UsageAdapterTest {
         list.add(mockkClass(AppUsage::class))
         list.add(mockkClass(AppUsage::class))
 
-        val tut = UsageAdapter(list)
+        val tut = TimelineAdapter(list)
 
         Assert.assertEquals(3, tut.itemCount)
     }

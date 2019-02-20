@@ -15,7 +15,7 @@ import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
 import com.timewasteanalyzer.usage.data.RefreshUsageListTask
 
-class UsageListFragment : RefreshableFragment(), RefreshStatusCallback {
+class ListFragment : RefreshableFragment(), RefreshStatusCallback {
 
     /** The repository for accessing the usage data. */
     private lateinit var mRepo: UsageRepository
@@ -90,7 +90,7 @@ class UsageListFragment : RefreshableFragment(), RefreshStatusCallback {
         usageRecyclerview.setHasFixedSize(true)
 
         // Add adapter containing the current list of usages
-        mUsageAdapter = UsageAdapter(mRepo.mUsageList)
+        mUsageAdapter = TimelineAdapter(mRepo.mUsageList)
         usageRecyclerview.adapter = mUsageAdapter
     }
 

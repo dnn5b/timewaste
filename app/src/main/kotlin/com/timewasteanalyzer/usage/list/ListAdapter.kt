@@ -11,7 +11,7 @@ import com.timewasteanalyzer.util.Utility.isEmpty
 import kotlinx.android.synthetic.main.layout_usage_list_item.view.*
 
 
-class UsageAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapter<UsageAdapter.UsageViewHolder>() {
+class ListAdapter(private val mUsageList: List<AppUsage>) : RecyclerView.Adapter<TimelineAdapter.UsageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsageViewHolder {
         val v = LayoutInflater.from(parent.context)
