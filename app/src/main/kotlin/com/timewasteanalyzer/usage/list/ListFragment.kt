@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
 import com.timewasteanalyzer.refresh.RefreshableFragment
-import com.timewasteanalyzer.usage.data.FilterType
 import com.timewasteanalyzer.usage.data.RefreshUsageListTask
 import com.timewasteanalyzer.usage.data.UsageRepository
 import kotlinx.android.synthetic.main.fragment_list.*
@@ -75,7 +74,7 @@ class ListFragment : RefreshableFragment(), RefreshStatusCallback {
         usageRecyclerview.setHasFixedSize(true)
 
         // Add adapter containing the current list of usages
-        mUsageAdapter = ListAdapter(mRepo.mUsageList)
+        mUsageAdapter = ListAdapter(mRepo.mListUsages)
         usageRecyclerview.adapter = mUsageAdapter
     }
 

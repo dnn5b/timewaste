@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.usage.data.FilterType
 import com.timewasteanalyzer.usage.data.UsageRepository
 import kotlinx.android.synthetic.main.fragment_list.*
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
@@ -21,7 +20,7 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
     private lateinit var mRepo: UsageRepository
 
     /** Adapter to show usages in RecyclerView. */
-    private lateinit var mUsageAdapter: RecyclerView.Adapter<*>
+    private lateinit var mTimelineAdapter: TimelineAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -75,8 +74,8 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
         usageRecyclerview.setHasFixedSize(true)
 
         // Add adapter containing the current list of usages
-        mUsageAdapter = TimelineAdapter(mRepo.mUsageList)
-        usageRecyclerview.adapter = mUsageAdapter
+        mTimelineAdapter = TimelineAdapter(mRepo.mTimelineUsages)
+        usageRecyclerview.adapter = mTimelineAdapter
     }
 
     /**
@@ -94,7 +93,7 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
         usageHeading.text = mRepo.getTotalTimeHeading
 
         // Update list with updated data
-        mUsageAdapter.notifyDataSetChanged()
+        mTimelineAdapter.notifyDataSetChanged()
 
         // If the parent Activity implements also the refresh callback it should be notified as well
         if (activity is RefreshStatusCallback) {

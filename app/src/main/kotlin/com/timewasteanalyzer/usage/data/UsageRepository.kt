@@ -6,15 +6,24 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.list.ListItemData
+import com.timewasteanalyzer.usage.timeline.TimelineItemData
 import com.timewasteanalyzer.util.SingletonHolder
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
+import javax.xml.datatype.DatatypeConstants
 
 class UsageRepository private constructor(context: Context) {
 
-    private var mListItemDataList: MutableList<ListItemData> = ArrayList()
-    private var mUsageStatsManager: UsageStatsManager
+    private var mListDataList: MutableList<ListItemData> = ArrayList()
     private var mListItemDataMap: HashMap<String, ListItemData> = HashMap()
+
+    private var mTimelineDataList: MutableList<TimelineItemData> = ArrayList()
+    private var mTimelineDataMap: HashMap<LocalDateTime, TimelineItemData> = HashMap()
+
+    private var mUsageStatsManager: UsageStatsManager
     private var mAllEvents: MutableList<UsageEvents.Event> = ArrayList()
     private var mContext: Context = context
     private var phoneUsageTotal: Long = 0
@@ -27,6 +36,16 @@ class UsageRepository private constructor(context: Context) {
     }
 
     companion object : SingletonHolder<UsageRepository, Context>(::UsageRepository)
+
+    val mListUsages: List<ListItemData>
+        get() {
+            return mListDataList
+        }
+
+    val mTimelineUsages: List<TimelineItemData>
+        get() {
+            return mTimelineDataList
+        }
 
     val getTotalTimeHeading: String
         get() {
@@ -46,11 +65,6 @@ class UsageRepository private constructor(context: Context) {
                     .toString()
         }
 
-    val mUsageList: List<ListItemData>
-        get() {
-            return mListItemDataList
-        }
-
     /**
      * Queries the usage data for the passed [FilterType].
      */
@@ -61,14 +75,18 @@ class UsageRepository private constructor(context: Context) {
         var startTime: Long = when (mCurrentFilterType) {
             // querying hours of current day
             FilterType.DAY -> now - 1000 * 3600 * LocalDateTime.now().hour
-
             FilterType.WEEK -> now - 1000 * 3600 * 24 * 7
         }
 
+        fetchListItemUsages(startTime, now)
+        determineTimelineFromEvents()
+    }
+
+    private fun fetchListItemUsages(start: Long, end: Long) {
         // Query events and initialize repository data
-        val queriedUsage = mUsageStatsManager.queryEvents(startTime, now)
-        mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, 0, now)
-        initializeDataBasedOn(queriedUsage)
+        val queriedUsage = mUsageStatsManager.queryEvents(start, end)
+        mUsageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, 0, end)
+        initializeListDataBasedOn(queriedUsage)
 
         // Iterate through usage list
         for (i in 0 until mAllEvents.size - 1) {
@@ -77,11 +95,11 @@ class UsageRepository private constructor(context: Context) {
 
             // Calculate opened counter
             if (event.packageName != event2.packageName && event2.eventType == 1) {
-                // if true, E1 (launch event of an app) app launched
+                // Another app (event2) has been opened
                 mListItemDataMap[event2.packageName]?.increaseLaunchCount()
             }
 
-            // UsageTime of apps in time range
+            // UsageTime of apps
             if (event.eventType == 1 && event2.eventType == 2 && event.className == event2.className) {
                 // Update total phone usage
                 val diff = event2.timeStamp - event.timeStamp
@@ -99,19 +117,69 @@ class UsageRepository private constructor(context: Context) {
         updateUsageList(mListItemDataMap.values)
     }
 
+    /**
+     * Determines the entries of the timeline based on [mAllEvents].
+     */
+    private fun determineTimelineFromEvents() {
+        // 1: create appInForegroundList containing all ("app in foreground"?) events
+//        var tempTimelineEvents = ArrayList<TimelineItemData>()
+
+        mAllEvents.sortedWith(compareBy { it.timeStamp })
+        for (i in 0 until mAllEvents.size - 1) {
+            val currentEvent = mAllEvents[i]
+            val nextEvent = mAllEvents[i + 1]
+
+            if (currentEvent.eventType == 1 && nextEvent.eventType == 2 && currentEvent.className == nextEvent.className) {
+                // App is closed so this usage can be added to the timeline slot
+                val appUsageTimeMs = nextEvent.timeStamp - currentEvent.timeStamp
+
+                val currentEventDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(currentEvent.timeStamp), ZoneId.systemDefault())
+                if (mTimelineDataList.isEmpty()) {
+                    // Create first entry
+                    val timeLineEvent = TimelineItemData(mContext, currentEventDate)
+                    timeLineEvent.addEntry(appUsageTimeMs, currentEvent.packageName)
+                    mTimelineDataList.add(timeLineEvent)
+
+                } else {
+                    val lastTimelineItemData = mTimelineDataList[mTimelineDataList.size -1]
+                    if (lastTimelineItemData.isInSameBlock(currentEventDate)) {
+                        lastTimelineItemData.addEntry(appUsageTimeMs, currentEvent.packageName)
+
+                    } else {
+                        // Create break between last and new event
+                        val breakStart = lastTimelineItemData.mStartDate.plusSeconds(1)
+                        val breakBlock = TimelineItemData(mContext, breakStart)
+                        breakBlock.mDuration = Duration.between(breakStart, currentEventDate).toMillis()
+                        mTimelineDataList.add(breakBlock)
+
+                        // Create new entry for current event
+                        val newTimeLineEvent = TimelineItemData(mContext, currentEventDate)
+                        newTimeLineEvent.addEntry(appUsageTimeMs, currentEvent.packageName)
+                        mTimelineDataList.add(newTimeLineEvent)
+                    }
+                }
+            }
+        }
+    }
+
     private fun resetFormerData() {
         phoneUsageTotal = 0
+
         mListItemDataMap = HashMap()
+        mTimelineDataMap = HashMap()
+
+        mTimelineDataList.clear()
+
         mAllEvents = ArrayList()
     }
 
     /**
-     * Resets the [.mListItemDataMap] and [.mAllEvents]. Afterwards the data is updated based on the passed
+     * Resets the [mListItemDataMap] and [mAllEvents]. Afterwards the data is updated based on the passed
      * [UsageEvents].
      *
      * @param usageEvents the queried [UsageEvents]
      */
-    private fun initializeDataBasedOn(usageEvents: UsageEvents) {
+    private fun initializeListDataBasedOn(usageEvents: UsageEvents) {
         var currentEvent: UsageEvents.Event
         while (usageEvents.hasNextEvent()) {
             currentEvent = UsageEvents.Event()
@@ -128,8 +196,8 @@ class UsageRepository private constructor(context: Context) {
     }
 
     private fun updateUsageList(values: Collection<ListItemData>) {
-        mListItemDataList.clear()
-        mListItemDataList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
+        mListDataList.clear()
+        mListDataList.addAll(values.sortedWith(compareBy { -it.msInForeground }))
     }
 
     /**
@@ -140,9 +208,10 @@ class UsageRepository private constructor(context: Context) {
     }
 
     /**
-     * Deletes all entries from {@link #mListItemDataList}.
+     * Deletes all entries from {@link #mListDataList} and {@link #mTimelineDataList}.
      */
     fun clear() {
-        mListItemDataList.clear()
+        mListDataList.clear()
+        mTimelineDataList.clear()
     }
 }
