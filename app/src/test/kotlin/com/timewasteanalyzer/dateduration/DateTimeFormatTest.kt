@@ -1,4 +1,4 @@
-package com.timewasteanalyzer.datetimeduration
+package com.timewasteanalyzer.dateduration
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

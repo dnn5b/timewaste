@@ -6,8 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.timewasteanalyzer.R
-import com.timewasteanalyzer.datetimeduration.DateTimeFormat
-import com.timewasteanalyzer.datetimeduration.DurationFormat
+import com.timewasteanalyzer.dateduration.DurationFormat
 import com.timewasteanalyzer.usage.timeline.TimelineItemData
 import kotlinx.android.synthetic.main.layout_timeline_item.view.*
 import java.time.format.DateTimeFormatter

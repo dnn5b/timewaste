@@ -1,4 +1,4 @@
-package com.timewasteanalyzer.datetimeduration
+package com.timewasteanalyzer.dateduration
 
 import java.time.Duration
 
