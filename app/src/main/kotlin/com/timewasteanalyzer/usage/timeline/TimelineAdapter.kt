@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.timewasteanalyzer.R
+import com.timewasteanalyzer.datetimeduration.DateTimeFormat
+import com.timewasteanalyzer.datetimeduration.DurationFormat
 import com.timewasteanalyzer.usage.timeline.TimelineItemData
 import kotlinx.android.synthetic.main.layout_timeline_item.view.*
 import java.time.format.DateTimeFormatter
@@ -38,7 +40,7 @@ class TimelineAdapter(private val mTimelineList: List<TimelineItemData>) : Recyc
                 heading = usage.mPackageNames[usage.mPackageNames.size - 1]
             }
             itemView.itemHeading.text = usage.mStartDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
-            itemView.itemDuration.text = usage.getUsageInSeconds()
+            itemView.itemDuration.text = DurationFormat(usage.mDuration).getShort()
             itemView.itemName.text = heading + " | " + usage.mPackageNames.size
 
             itemView.timelineBar.setBackgroundResource(usage.getColor())

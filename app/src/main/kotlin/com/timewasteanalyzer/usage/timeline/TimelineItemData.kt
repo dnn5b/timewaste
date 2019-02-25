@@ -33,10 +33,6 @@ class TimelineItemData(val context: Context, val mStartDate: LocalDateTime) {
         return result
     }
 
-    fun getUsageInSeconds(): String {
-        return (mDuration / 1000).toString()
-    }
-
     fun getColor(): Int {
         return if (mPackageNames.isEmpty()) {
             R.color.grey
