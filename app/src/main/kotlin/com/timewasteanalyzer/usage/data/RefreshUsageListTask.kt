@@ -3,7 +3,6 @@ package com.timewasteanalyzer.usage.data
 
 import android.content.Context
 import android.os.AsyncTask
-import com.timewasteanalyzer.usage.data.UsageRepository
 import com.timewasteanalyzer.refresh.RefreshStatusCallback
 
 

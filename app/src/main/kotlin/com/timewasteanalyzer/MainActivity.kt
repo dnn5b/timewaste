@@ -15,7 +15,7 @@ import com.timewasteanalyzer.settings.SettingsFragment
 import com.timewasteanalyzer.usage.data.FilterType
 import com.timewasteanalyzer.usage.data.UsageRepository
 import com.timewasteanalyzer.usage.list.ListFragment
-import com.timewasteanalyzer.usage.list.TimelineFragment
+import com.timewasteanalyzer.usage.timeline.TimelineFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), RefreshStatusCallback {
         var fragmentToAdd: Fragment? = null
 
         navigation.setOnNavigationItemSelectedListener { item ->
-            var isHandled = when (item.itemId) {
+            val isHandled = when (item.itemId) {
                 R.id.navigation_today -> {
                     fragmentToAdd = getUsageFragmentBasedOnSetting()
                     mUsageRepo.setCurrentType(FilterType.DAY)

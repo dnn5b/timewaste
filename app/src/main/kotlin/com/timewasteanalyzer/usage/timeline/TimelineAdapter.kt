@@ -1,4 +1,4 @@
-package com.timewasteanalyzer.usage.list
+package com.timewasteanalyzer.usage.timeline
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.dateduration.DurationFormat
-import com.timewasteanalyzer.usage.timeline.TimelineItemData
 import kotlinx.android.synthetic.main.layout_timeline_item.view.*
 import java.time.format.DateTimeFormatter
 

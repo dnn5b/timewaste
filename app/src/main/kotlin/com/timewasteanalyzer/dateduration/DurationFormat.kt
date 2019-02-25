@@ -2,13 +2,9 @@ package com.timewasteanalyzer.dateduration
 
 import java.time.Duration
 
-class DurationFormat {
+class DurationFormat(durationMillis: Long) {
 
-    private var mDuration: Duration
-
-    constructor(durationMillis: Long) {
-        mDuration = Duration.ofMillis(durationMillis)
-    }
+    private var mDuration: Duration = Duration.ofMillis(durationMillis)
 
     /**
      * Returns the {mDuration} in format 'dd.MM.yyyy'.

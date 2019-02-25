@@ -13,7 +13,6 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-import javax.xml.datatype.DatatypeConstants
 
 class UsageRepository private constructor(context: Context) {
 
@@ -49,7 +48,7 @@ class UsageRepository private constructor(context: Context) {
 
     val getTotalTimeHeading: String
         get() {
-            var filterText = when (mCurrentFilterType) {
+            val filterText = when (mCurrentFilterType) {
                 FilterType.DAY -> R.string.title_today
                 FilterType.WEEK -> R.string.title_week
             }
@@ -72,7 +71,7 @@ class UsageRepository private constructor(context: Context) {
         resetFormerData()
 
         val now = System.currentTimeMillis()
-        var startTime: Long = when (mCurrentFilterType) {
+        val startTime: Long = when (mCurrentFilterType) {
             // querying hours of current day
             FilterType.DAY -> now - 1000 * 3600 * LocalDateTime.now().hour
             FilterType.WEEK -> now - 1000 * 3600 * 24 * 7

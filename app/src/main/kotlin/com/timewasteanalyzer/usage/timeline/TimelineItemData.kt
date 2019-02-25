@@ -25,7 +25,7 @@ class TimelineItemData(val context: Context, val mStartDate: LocalDateTime) {
 
     fun isInSameBlock(currentEventDate: LocalDateTime?): Boolean {
         var result = false
-        var currentBlockEnd = mStartDate.plusSeconds(mDuration / 1000)
+        val currentBlockEnd = mStartDate.plusSeconds(mDuration / 1000)
         if (currentEventDate != null && currentEventDate.isBefore(currentBlockEnd.plusMinutes(5))) {
             // If the passed date is in a 5min block from current end
             result = true

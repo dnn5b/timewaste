@@ -27,7 +27,7 @@ class ListItemDataTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
 
-        every { mockedContext.getPackageManager() } returns mockedPackageManager
+        every { mockedContext.packageManager } returns mockedPackageManager
         tut = ListItemData(mockedContext, "")
     }
 
