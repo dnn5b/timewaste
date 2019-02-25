@@ -1,10 +1,9 @@
 package com.timewasteanalyzer.util
 
 
-import org.junit.Test
-
 import junit.framework.Assert.assertFalse
 import junit.framework.Assert.assertTrue
+import org.junit.Test
 
 
 class UtilityTest {
