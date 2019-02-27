@@ -38,7 +38,7 @@ class TimelineAdapter(private val mTimelineList: List<TimelineItemData>) : Recyc
                 heading = usage.mPackageNames[usage.mPackageNames.size - 1]
             }
             itemView.itemHeading.text = usage.mStartDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
-            itemView.itemDuration.text = DurationFormat(usage.mDuration).getShort()
+            itemView.itemDuration.text = DurationFormat(usage.mDuration).getShortText()
             itemView.itemName.text = heading + " | " + usage.mPackageNames.size
 
             itemView.timelineBar.setBackgroundResource(usage.getColor())
