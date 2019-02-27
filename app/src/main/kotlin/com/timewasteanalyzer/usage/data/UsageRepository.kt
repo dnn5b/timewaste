@@ -8,7 +8,7 @@ import com.timewasteanalyzer.R
 import com.timewasteanalyzer.usage.list.ListItemData
 import com.timewasteanalyzer.usage.timeline.TimelineItemData
 import com.timewasteanalyzer.util.SingletonHolder
-import java.time.LocalDateTime
+import org.threeten.bp.LocalDateTime
 import java.util.*
 
 class UsageRepository private constructor(context: Context) {

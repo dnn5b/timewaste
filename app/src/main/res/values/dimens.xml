@@ -4,8 +4,10 @@
     <dimen name="default_padding">10dp</dimen>
 
     <!-- Text sizes -->
-    <dimen name="text_size_list_item_name">14dp</dimen>
-    <dimen name="text_size_list_item_other">10dp</dimen>
+    <dimen name="text_size_list_item_name">14sp</dimen>
+    <dimen name="text_size_list_item_other">10sp</dimen>
+    <dimen name="text_size_timeline_item_heading">18sp</dimen>
+    <dimen name="text_size_timeline_item_text">14sp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
 </resources>

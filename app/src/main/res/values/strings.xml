@@ -14,4 +14,7 @@
     <string name="settings_heading">Settings</string>
     <string name="settings_timeline">Use timeline</string>
 
+    <!-- Timeline -->
+    <string name="timeline_item_break_heading">Break</string>
+
 </resources>

@@ -4,7 +4,12 @@
     <color name="colorPrimaryDark">#1b5e20</color>
     <color name="colorAccent">#FF8F00</color>
 
+    <color name="timeline_low">#43a047</color>
+    <color name="timeline_medium">#FF8F00</color>
+    <color name="timeline_high">#F44336</color>
+
     <color name="black">#000000</color>
     <color name="grey">#5C5C5C</color>
+    <color name="grey_light">#8A8A8A</color>
     <color name="white">#FFFFFF</color>
 </resources>

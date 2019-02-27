@@ -1,6 +1,7 @@
 package com.timewasteanalyzer.dateduration
 
-import java.time.Duration
+import org.threeten.bp.Duration
+
 
 class DurationFormat(durationMillis: Long) {
 

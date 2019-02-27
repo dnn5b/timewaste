@@ -7,7 +7,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.com.timewasteanalyzer"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -38,6 +38,7 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:support-v4:$android_support_version"
     implementation "com.android.support:recyclerview-v7:$android_support_version"
+    implementation "com.jakewharton.threetenabp:threetenabp:$threetenabp_version"
 
     testImplementation "junit:junit:$junit_version"
     testImplementation "io.mockk:mockk:$mockk_version"

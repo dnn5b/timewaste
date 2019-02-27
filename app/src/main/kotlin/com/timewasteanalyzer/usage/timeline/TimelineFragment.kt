@@ -92,6 +92,7 @@ class TimelineFragment : RefreshableFragment(), RefreshStatusCallback {
         usageHeading.text = mRepo.getTotalTimeHeading
 
         // Update list with updated data
+        usageRecyclerview.recycledViewPool.clear()
         mTimelineAdapter.notifyDataSetChanged()
 
         // If the parent Activity implements also the refresh callback it should be notified as well

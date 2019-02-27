@@ -3,10 +3,12 @@ package com.timewasteanalyzer.usage.data
 import android.app.usage.UsageEvents
 import android.content.Context
 import com.timewasteanalyzer.usage.timeline.TimelineItemData
-import java.time.Duration
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
+import com.timewasteanalyzer.usage.timeline.TimelineItemData.Type.BREAK
+import com.timewasteanalyzer.usage.timeline.TimelineItemData.Type.USAGE
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 import java.util.*
 
 class TimelineData {
@@ -37,7 +39,7 @@ class TimelineData {
                 val currentEventDate = LocalDateTime.ofInstant(Instant.ofEpochMilli(currentEvent.timeStamp), ZoneId.systemDefault())
                 if (result.isEmpty()) {
                     // Create first entry
-                    val timeLineEvent = TimelineItemData(mContext, currentEventDate)
+                    val timeLineEvent = TimelineItemData(mContext, USAGE, currentEventDate)
                     timeLineEvent.addEntry(appUsageTimeMs, currentEvent.packageName)
                     result.add(timeLineEvent)
 
@@ -49,12 +51,12 @@ class TimelineData {
                     } else {
                         // Create break between last and new event
                         val breakStart = lastTimelineItemData.mStartDate.plusSeconds(1)
-                        val breakBlock = TimelineItemData(mContext, breakStart)
+                        val breakBlock = TimelineItemData(mContext, BREAK, breakStart)
                         breakBlock.mDuration = Duration.between(breakStart, currentEventDate).toMillis()
                         result.add(breakBlock)
 
                         // Create new entry for current event
-                        val newTimeLineEvent = TimelineItemData(mContext, currentEventDate)
+                        val newTimeLineEvent = TimelineItemData(mContext, USAGE, currentEventDate)
                         newTimeLineEvent.addEntry(appUsageTimeMs, currentEvent.packageName)
                         result.add(newTimeLineEvent)
                     }

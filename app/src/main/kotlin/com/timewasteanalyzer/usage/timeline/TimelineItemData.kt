@@ -4,10 +4,14 @@ package com.timewasteanalyzer.usage.timeline
 import android.content.Context
 import android.graphics.drawable.Drawable
 import com.timewasteanalyzer.R
-import java.time.LocalDateTime
+import org.threeten.bp.LocalDateTime
 
 
-class TimelineItemData(val context: Context, val mStartDate: LocalDateTime) {
+class TimelineItemData(val context: Context, var mType: Type, val mStartDate: LocalDateTime) {
+
+    enum class Type(val value: Int) {
+        USAGE(0), BREAK(1)
+    }
 
     var mAppIcons: MutableList<Drawable> = ArrayList()
 
@@ -34,10 +38,20 @@ class TimelineItemData(val context: Context, val mStartDate: LocalDateTime) {
     }
 
     fun getColor(): Int {
-        return if (mPackageNames.isEmpty()) {
-            R.color.grey
+        return if (mType == Type.USAGE) {
+            getColorForUsage()
         } else {
-            R.color.colorAccent
+            R.color.grey_light
+        }
+    }
+
+    private fun getColorForUsage(): Int {
+        return when {
+            mDuration < 60000 -> // Below 1min
+                R.color.timeline_low
+            mDuration < 300000 -> // Below 5min
+                R.color.timeline_medium
+            else -> R.color.timeline_high
         }
     }
 
