@@ -10,4 +10,6 @@
     <dimen name="text_size_timeline_item_text">14sp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
+    <!-- Timeline -->
+    <dimen name="timeline_icon_size">35dp</dimen>
 </resources>

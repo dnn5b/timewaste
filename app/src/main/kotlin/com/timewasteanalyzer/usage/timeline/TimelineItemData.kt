@@ -50,8 +50,13 @@ class TimelineItemData(val context: Context, var mType: Type, val mStartDate: Lo
         }
     }
 
-    fun getTop3Apps(): Array<Drawable?> {
-        return mApps.keys.take(3).map { appData -> appData.getmAppIcon() }.toTypedArray()
+    fun getTop5Apps(): Array<Drawable?> {
+        return mApps.keys
+                .take(5)
+                .distinctBy { appData -> appData.getmAppName() }
+                .map { appData -> appData.getmAppIcon() }
+                .distinct()
+                .toTypedArray()
     }
 
     private fun getColorForUsage(): Int {

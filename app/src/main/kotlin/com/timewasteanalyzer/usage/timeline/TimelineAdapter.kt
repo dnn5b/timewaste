@@ -1,15 +1,16 @@
 package com.timewasteanalyzer.usage.timeline
 
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.timewasteanalyzer.R
 import com.timewasteanalyzer.dateduration.DurationFormat
 import com.timewasteanalyzer.usage.timeline.TimelineItemData.Type
 import kotlinx.android.synthetic.main.layout_timeline_item_break.view.*
 import kotlinx.android.synthetic.main.layout_timeline_item_usage.view.*
-import kotlinx.android.synthetic.main.layout_usage_list_item.view.*
 import org.threeten.bp.format.DateTimeFormatter
 
 
@@ -52,20 +53,21 @@ class TimelineAdapter(private val mTimelineList: List<TimelineItemData>) : Recyc
         fun bindUsage(usage: TimelineItemData) {
             itemView.itemHeading.text = usage.mStartDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
             itemView.itemDuration.text = DurationFormat(usage.mDuration).getShortText()
-
             itemView.timelineBarUsage.setBackgroundResource(usage.getColor())
 
-            val top3Apps = usage.getTop3Apps()
-            if (top3Apps.isNotEmpty()) {
-                itemView.itemIcon1.setImageDrawable(top3Apps[0])
-            }
+            val icons = usage.getTop5Apps()
+            applyImage(icons,0, itemView.itemIcon1)
+            applyImage(icons,1, itemView.itemIcon2)
+            applyImage(icons,2, itemView.itemIcon3)
+            applyImage(icons,3, itemView.itemIcon4)
+            applyImage(icons,4, itemView.itemIcon5)
+        }
 
-            if (top3Apps.size > 1) {
-                itemView.itemIcon2.setImageDrawable(top3Apps[1])
-            }
-
-            if (top3Apps.size > 2) {
-                itemView.itemIcon3.setImageDrawable(top3Apps[2])
+        private fun applyImage(icons: Array<Drawable?>, iconPos: Int, imageView: ImageView) {
+            if (icons.size > iconPos) {
+                imageView.setImageDrawable(icons[iconPos])
+            } else {
+                imageView.setImageDrawable(null)
             }
         }
     }
