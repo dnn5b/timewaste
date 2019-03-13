@@ -9,6 +9,7 @@ import com.timewasteanalyzer.dateduration.DurationFormat
 import com.timewasteanalyzer.usage.timeline.TimelineItemData.Type
 import kotlinx.android.synthetic.main.layout_timeline_item_break.view.*
 import kotlinx.android.synthetic.main.layout_timeline_item_usage.view.*
+import kotlinx.android.synthetic.main.layout_usage_list_item.view.*
 import org.threeten.bp.format.DateTimeFormatter
 
 
@@ -49,16 +50,23 @@ class TimelineAdapter(private val mTimelineList: List<TimelineItemData>) : Recyc
      */
     class UsageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun bindUsage(usage: TimelineItemData) {
-            var heading = "empty..."
-            if (usage.mPackageNames.isNotEmpty() && usage.mPackageNames[usage.mPackageNames.size - 1] != null) {
-                heading = usage.mPackageNames[usage.mPackageNames.size - 1]
-            }
-            itemView.itemHeading.text = usage.mStartDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
+            itemView.itemHeading.text = usage.mStartDate.format(DateTimeFormatter.ofPattern("HH:mm:ss"))
             itemView.itemDuration.text = DurationFormat(usage.mDuration).getShortText()
-            itemView.itemName.text = heading + " | " + usage.mPackageNames.size
 
             itemView.timelineBarUsage.setBackgroundResource(usage.getColor())
-//            itemView.itemIcon.setImageDrawable(usage.mAppIcon)
+
+            val top3Apps = usage.getTop3Apps()
+            if (top3Apps.isNotEmpty()) {
+                itemView.itemIcon1.setImageDrawable(top3Apps[0])
+            }
+
+            if (top3Apps.size > 1) {
+                itemView.itemIcon2.setImageDrawable(top3Apps[1])
+            }
+
+            if (top3Apps.size > 2) {
+                itemView.itemIcon3.setImageDrawable(top3Apps[2])
+            }
         }
     }
 

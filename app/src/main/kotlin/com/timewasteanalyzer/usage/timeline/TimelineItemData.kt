@@ -4,6 +4,7 @@ package com.timewasteanalyzer.usage.timeline
 import android.content.Context
 import android.graphics.drawable.Drawable
 import com.timewasteanalyzer.R
+import com.timewasteanalyzer.util.AppDataHandler
 import org.threeten.bp.LocalDateTime
 
 
@@ -13,18 +14,22 @@ class TimelineItemData(val context: Context, var mType: Type, val mStartDate: Lo
         USAGE(0), BREAK(1)
     }
 
-    var mAppIcons: MutableList<Drawable> = ArrayList()
-
     /** In milliseconds. */
     var mDuration: Long = 0
 
-    var mPackageNames: MutableList<String> = ArrayList()
+    /** All apps used in this slot. */
+    val mApps: HashMap<AppDataHandler, Long> = HashMap()
 
     fun addEntry(duration: Long, packageName: String) {
-//    fun addEntry(duration: Long, icon: Drawable) {
         mDuration += duration
-        mPackageNames.add(packageName)
-//        mAppIcons.add(icon)
+
+        val appDataHandler = AppDataHandler(context, packageName)
+        if (mApps.containsKey(appDataHandler)) {
+            val newDuration = mApps[appDataHandler]?.plus(duration)
+            mApps[appDataHandler] = newDuration!!
+        } else {
+            mApps[appDataHandler] = duration
+        }
     }
 
     fun isInSameBlock(currentEventDate: LocalDateTime?): Boolean {
@@ -43,6 +48,10 @@ class TimelineItemData(val context: Context, var mType: Type, val mStartDate: Lo
         } else {
             R.color.grey_light
         }
+    }
+
+    fun getTop3Apps(): Array<Drawable?> {
+        return mApps.keys.take(3).map { appData -> appData.getmAppIcon() }.toTypedArray()
     }
 
     private fun getColorForUsage(): Int {

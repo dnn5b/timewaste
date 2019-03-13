@@ -92,7 +92,7 @@ class ListFragment : RefreshableFragment(), RefreshStatusCallback {
         // Update heading
         usageHeading.text = mRepo.getTotalTimeHeading
 
-        // Update list with updated data
+        // Clear pool before update data to prevent leaks when switching fast between fragments
         usageRecyclerview.recycledViewPool.clear()
         mUsageAdapter.notifyDataSetChanged()
 

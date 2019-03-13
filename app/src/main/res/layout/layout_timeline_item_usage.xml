@@ -16,40 +16,67 @@
 
     <TextView
         android:id="@+id/itemHeading"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_toEndOf="@+id/timelineBarUsage"
         android:layout_marginStart="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="5dp"
+        android:textSize="@dimen/text_size_timeline_item_heading"
+        android:text="@string/timeline_item_break_heading"
         android:textColor="@color/black"
+        />
+
+    <ImageView
+        android:id="@+id/itemDurationIcon"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignStart="@+id/itemHeading"
+        android:layout_marginStart="-5dp"
+        android:layout_below="@+id/itemHeading"
+        android:src="@drawable/ic_launcher_foreground"
+        android:scaleType="centerInside"
         />
 
     <TextView
         android:id="@+id/itemDuration"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/itemHeading"
-        android:layout_below="@+id/itemHeading"
-        android:textColor="@color/black"
+        android:layout_toEndOf="@+id/itemDurationIcon"
+        android:layout_alignTop="@+id/itemDurationIcon"
+        android:layout_alignBottom="@+id/itemDurationIcon"
+        android:gravity="center"
+        android:textColor="@color/grey"
         />
 
-    <TextView
-        android:id="@+id/itemName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/itemDuration"
-        android:layout_below="@+id/itemDuration"
-        android:textColor="@color/black"
+    <ImageView
+        android:id="@+id/itemIcon1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/itemHeading"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="30dp"
+        android:scaleType="fitStart"
         />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/itemIcon"-->
-        <!--android:layout_width="40dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_toEndOf="@+id/timelineBar"-->
-        <!--android:layout_marginStart="30dp"-->
-        <!--android:scaleType="fitStart"-->
-        <!--/>-->
+    <ImageView
+        android:id="@+id/itemIcon2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toStartOf="@+id/itemIcon1"
+        android:layout_alignTop="@+id/itemIcon1"
+        android:layout_marginEnd="10dp"
+        android:scaleType="fitStart"
+        />
+
+    <ImageView
+        android:id="@+id/itemIcon3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toStartOf="@+id/itemIcon2"
+        android:layout_alignTop="@+id/itemIcon2"
+        android:layout_marginEnd="10dp"
+        android:scaleType="fitStart"
+        />
 
 </RelativeLayout>
